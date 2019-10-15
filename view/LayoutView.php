@@ -2,16 +2,21 @@
 
 class LayoutView {
   
-  public function render() {
+  public function render(LoginView $v, PicsView $pv) {
     echo '<!DOCTYPE html>
       <html>
         <head>
-          <meta charset="utf-8">
-          <title>Login Example</title>
+          <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+          <title>Favvo bilder</title>
         </head>
         <body>
-          <h1>Login to your place</h1>
-
+          <h1>Logga in</h1>
+          <div class="container">
+            ' . $v->response() . '
+          </div>
+          <div class="container2">
+            ' . $pv->showHTML() . '
+          </div>
          </body>
       </html>
     ';
