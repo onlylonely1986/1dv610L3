@@ -8,6 +8,6 @@ class RunApplication {
         ini_set('display_errors', 'On');
 
         require_once('controller/MainController.php');
-        $c = new MainController();
+        $c = new \controller\MainController();
     }
 }

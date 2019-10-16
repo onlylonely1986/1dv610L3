@@ -1,21 +1,25 @@
 <?php
 
+namespace view;
+
 class LayoutView {
   
-  public function render(LoginView $v, PicsView $pv) {
+  public function render(LoginView $v, ScribbleView $sv, array $collection) {
+
     echo '<!DOCTYPE html>
       <html>
         <head>
           <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
-          <title>Favvo bilder</title>
+          <title>Klotterplanket</title>
         </head>
         <body>
+          <h1>KLOTTERPLANKET</h1>
           <h1>Logga in</h1>
           <div class="container">
             ' . $v->response() . '
           </div>
           <div class="container2">
-            ' . $pv->showHTML() . '
+            ' . $sv->scribbleHTML($collection) . '
           </div>
          </body>
       </html>

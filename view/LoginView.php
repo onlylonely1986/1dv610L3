@@ -1,5 +1,7 @@
 <?php
 
+namespace view;
+
 class LoginView {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
@@ -32,6 +34,7 @@ class LoginView {
 	* @return  void, BUT writes to standard output!
 	*/
 	private function generateLoginFormHTML() {
+        $message = "";
 		return '
 			<form method="POST" > 
 				<fieldset>
@@ -50,5 +53,19 @@ class LoginView {
 				</fieldset>
 			</form>
 		';
-    }
+	}
+	
+	/**
+	* Generate HTML code on the output buffer for the logout button
+	* @param $message, String output message
+	* @return  void, BUT writes to standard output!
+	*/
+	private function generateLogoutButtonHTML($message) {
+		return '
+			<form  method="post" >
+				<p id="' . self::$messageId . '">' . $message .'</p>
+				<input type="submit" name="' . self::$logout . '" value="logout"/>
+			</form>
+		';
+	}
 }
