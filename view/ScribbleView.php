@@ -7,17 +7,16 @@ class ScribbleView {
   
   public function scribbleHTML(array $collection) {
       return '<h2>Vad har du på hjärtat idag?</h2>
-              <h4>Rubrik</h4>
-              <p>Innehåll</p>
 
               ' . $this->iterateOverScribbles($collection) . '
       ';
   }
 
   private function iterateOverScribbles($collection) {
-    
+    $ret = "";
     foreach ($collection as $item => $item_value) {
-      return "<p>Ny post: $item_value->user  säger  $item_value->title !</p>\n";
+      $ret .= "<p>Ny post: <b>$item_value->user</b>  säger: $item_value->title  $item_value->text</p>\n";
     }
+    return $ret;
   }
 }
