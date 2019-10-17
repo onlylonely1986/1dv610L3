@@ -4,7 +4,7 @@ namespace view;
 
 class LayoutView {
   
-  public function render(LoginView $v, ScribbleView $sv, array $collection) {
+  public function render(LoginView $v, ScribbleView $sv) {
 
     echo '<!DOCTYPE html>
       <html>
@@ -19,7 +19,7 @@ class LayoutView {
             ' . $v->response() . '
           </div>
           <div class="container2">
-            ' . $sv->scribbleHTML($collection) . '
+            ' . $sv->scribbleHTML() . '
           </div>
          </body>
       </html>

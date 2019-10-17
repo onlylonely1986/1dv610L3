@@ -2,6 +2,7 @@
 
 // Controller för scribbleactivities
 
+// validering för att kolla om inloggad
 // kollar om användare lägger till en ny scribble
 
 // hämtar i view, skickar till model
