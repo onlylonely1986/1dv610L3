@@ -45,21 +45,18 @@ class ScribbleStorage {
     public function getSavedScribbles() : array {
         // TODO validation check connection to db
         try {
-            $sqli = "SELECT (user, title, text) FROM scribbleitem";
+            $sqli = "SELECT user, title, text FROM scribbleitem";
             if($result = mysqli_query(self::$conn, $sqli)) {
-                // var_dump($result);
                 echo "worked well";
             }
+
             $data = array();
-            
             if(mysqli_num_rows($result) > 0) {
                 while($row = mysqli_fetch_assoc($result)) {
                     $data[] = $row;
                 }
             }
             mysqli_close(self::$conn);
-            // echo "everything worked well";
-            // var_dump($data);
             return $data;
         } catch (Exception $e) {
             echo "Problems!! .... $e";

@@ -1,6 +1,5 @@
 <?php
 
-
 class Settings {
     public $dbuserName = 'enter your db username here';
     public $dbpassword = 'enter your db password here';
