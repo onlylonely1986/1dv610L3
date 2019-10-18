@@ -3,7 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=windows,visualstudiocode
 
 ### Php ###
-setting.php
+*setting.php
 
 ### VisualStudioCode ###
 .vscode/*
