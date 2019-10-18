@@ -1,6 +1,9 @@
 <?php
 
-class Settings {
 
-    
+class Settings {
+    public $dbuserName = 'enter your db username here';
+    public $dbpassword = 'enter your db password here';
+    public $dbserverName = 'enter your db servername here';
+    public $dbName = 'enter your db name here';
 }

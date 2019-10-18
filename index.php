@@ -5,7 +5,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// TODO skapa upp settings och skicka med instansen
+require_once('settings.php');
 require_once('RunApplication.php');
-$start= new RunApplication();
+
+$settings = new settings();
+$start= new RunApplication($settings);
 $start->run();
