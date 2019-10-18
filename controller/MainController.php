@@ -2,19 +2,21 @@
 
 namespace controller;
 
-require_once('view/LayoutView.php');
-require_once('view/LoginView.php');
-require_once('view/ScribbleView.php');
-// require_once('.env');
+// require_once('view/LayoutView.php');
+// require_once('view/LoginView.php');
+// require_once('view/ScribbleView.php');
+// // require_once('.env');
 
-// require_once('ScribbleController.php');
-require_once('model/ScribbleSaver.php');
-require_once('model/ScribbleItem.php');
-require_once('model/ScribbleCollection.php');
+// // require_once('ScribbleController.php');
+// require_once('model/ScribbleSaver.php');
+// require_once('model/ScribbleItem.php');
+// require_once('model/ScribbleCollection.php');
+
+// // testa settings
+// require_once('vendor/settings.php');
 class MainController {
 
     public function __construct() {
-
         
         // connect servern ..............................
         $saver = new \model\ScribbleSaver();
