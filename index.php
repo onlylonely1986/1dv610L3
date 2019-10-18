@@ -6,8 +6,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once('settings.php');
-require_once('RunApplication.php');
+require_once('Application.php');
 
 $settings = new settings();
-$start= new RunApplication($settings);
+$start= new Application($settings);
 $start->run();

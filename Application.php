@@ -1,7 +1,7 @@
 <?php
 
 require_once("model/UserStorage.php");
-require_once("model/ScribbleSaver.php");
+require_once("model/ScribbleStorage.php");
 require_once("model/ScribbleCollection.php");
 require_once("controller/MainController.php");
 require_once("controller/LoginController.php");
@@ -10,8 +10,9 @@ require_once("view/LayoutView.php");
 require_once("view/LoginView.php");
 require_once("view/ScribbleView.php");
 
-class RunApplication {
-    private $storage;
+class Application {
+    private $userStorage;
+    private $scribbleStorage;
     private $mainController;
     private $loginController;
     private $scribbleController;
@@ -21,15 +22,15 @@ class RunApplication {
     private $scribbleView;
     
     // TODO ta en settings i sin konstruktor, skicka in till de som sparar via db
-    public function __construct() {
+    public function __construct($settings) {
 
-        $this->storage = new \model\UserStorage();
-        $this->mainController = new \controller\MainController();
+        $this->userStorage = new \model\UserStorage();
+        $this->scribbleStorage = new \model\ScribbleStorage($settings);
+        // $this->mainController = new \controller\MainController();
         $this->loginController = new \controller\LoginController();
         $this->scribbleController = new \controller\ScribbleController();
 
-        $this->user = $this->storage->loadUser();
-        $this->layoutView  = new \view\LayoutView();
+        $this->user = $this->userStorage->loadUser();
     }
 
 	public function run() {
@@ -37,19 +38,22 @@ class RunApplication {
 		$this->generateOutput();
 	}
 	private function changeState() {
-		$this->loginController->doChangeUserName();
-        $this->storage->saveUser($this->user);
+		$this->loginController->checkForLoggedIn();
+        $this->userStorage->setUser($this->user);
         // TODO om vi är inloggade kör scribblecontroller annars kör inte den
 	}
 	private function generateOutput() {
-		$body = $this->layoutView->getBody();
-        $title = $this->layoutView->getTitle();
+        $layoutView  = new \view\LayoutView();
+		$body = $layoutView->getBody();
+        $title = $layoutView->getTitle();
+        // TODO kolla upp detta: Warning: mysqli_num_rows() expects parameter 1 to be mysqli_result, bool given in C:\xampp\htdocs\1dv610L3\model\ScribbleStorage.php on line 52
+        $data = $this->scribbleStorage->getSavedScribbles();
+ 
         $loginView  = new \view\LoginView($title, $body);
-        $scribbleView  = new \view\ScribbleView();
+        $scribbleView  = new \view\ScribbleView($data, true);
         // $pageView = new \View\HTMLPageView($title, $body);
 
         // TODO om man är inloggad kör en speciell view för scribbles
-        $loginView->echoHTML();
-        $scribbleView->echoHTML();
+        $layoutView->render($loginView, $scribbleView);
 	}
 }

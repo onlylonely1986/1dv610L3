@@ -4,18 +4,21 @@ namespace model;
 
 require_once('model/ScribbleCollection.php');
 
-class ScribbleSaver {
+class ScribbleStorage {
 
-    // TODO: fixa dessa som säkra environment variables
-    private static $servername = 'localhost';
-    private static $username = 'user1';
-    private static $password = 'SU4toRmJ0PAlEhI2';
-    private static $dbName = 'scribbledb';
+    private static $serverName;
+    private static $userName;
+    private static $passWord;
+    private static $dbName;
     private static $conn;
 
     // Create connection
-    public function __construct() {
-        self::$conn = mysqli_connect(self::$servername, self::$username, self::$password, self::$dbName);
+    public function __construct($settings) {
+        self::$serverName = $settings->dbserverName;
+        self::$userName = $settings->dbuserName;
+        self::$passWord = $settings->dbpassWord;
+        self::$dbName = $settings->dbName;
+        self::$conn = mysqli_connect(self::$serverName, self::$userName, self::$passWord, self::$dbName);
 
         // Check connection
         if (self::$conn->connect_error) {

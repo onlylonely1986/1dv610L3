@@ -5,7 +5,6 @@ namespace view;
 class ScribbleView {
   private static $isLoggedIn;
   private static $userName;
-
   private static $collection;
 
   public function __construct(array $data, bool $isLoggedIn) {
@@ -15,9 +14,9 @@ class ScribbleView {
     self::$userName = "Tomu";
   }
 
-  public function scribbleHTML() {
+  public function echoHTML() {
     // TODO om inloggad skicka med en rubrik, om inte skicka en annan
-      return '<h2>Vad har du på hjärtat idag ' . self::$userName . ' ?</h2>
+    return '<h2>Vad har du på hjärtat idag ' . self::$userName . ' ?</h2>
                  ' . $this->scribbleFormHTML(). '
                  ' . $this->iterateOverScribbles() . '
               ';

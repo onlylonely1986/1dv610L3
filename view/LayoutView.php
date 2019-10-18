@@ -4,6 +4,14 @@ namespace view;
 
 class LayoutView {
   
+  public function getBody() {
+
+  }
+
+  public function getTitle() {
+    
+  }
+
   public function render(LoginView $v, ScribbleView $sv) {
 
     echo '<!DOCTYPE html>
@@ -16,10 +24,10 @@ class LayoutView {
           <h1>KLOTTERPLANKET</h1>
           <h1>Logga in</h1>
           <div class="container">
-            ' . $v->response() . '
+            ' . $v->echoHTML() . '
           </div>
           <div class="container2">
-            ' . $sv->scribbleHTML() . '
+            ' . $sv->echoHTML() . '
           </div>
          </body>
       </html>

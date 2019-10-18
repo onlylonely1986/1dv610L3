@@ -6,6 +6,10 @@ class UserStorage {
 
 
     public function loadUser() {
-        return;
+
+    }
+
+    public function setUser() {
+
     }
 }

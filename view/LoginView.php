@@ -23,7 +23,7 @@ class LoginView {
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
-	public function response() {
+	public function echoHTML() {
         $response = $this->generateLoginFormHTML();
         return $response;
 	}
@@ -49,7 +49,7 @@ class LoginView {
 
 					<label for="' . self::$keep . '">Håll mig inloggad :</label>
 					<input type="checkbox" id="' . self::$keep . '" name="' . self::$keep . '" />
-					<input type="submit" name="' . self::$login . '" value="Logga in" />
+					<input type="submit" name="' . self::$login . '" value="Logga in " />
 				</fieldset>
 			</form>
 		';
