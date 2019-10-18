@@ -64,7 +64,7 @@ class LoginView {
 		return '
 			<form  method="post" >
 				<p id="' . self::$messageId . '">' . $message .'</p>
-				<input type="submit" name="' . self::$logout . '" value="logout"/>
+				<input type="submit" name="' . self::$logout . '" value="Logga ut"/>
 			</form>
 		';
 	}

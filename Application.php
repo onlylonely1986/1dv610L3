@@ -20,17 +20,19 @@ class Application {
     private $layoutView;
     private $loginView;
     private $scribbleView;
+    private static $userIsLoggedIn;
     
-    // TODO ta en settings i sin konstruktor, skicka in till de som sparar via db
     public function __construct($settings) {
 
-        $this->userStorage = new \model\UserStorage();
+        $this->userStorage = new \model\UserStorage($settings);
         $this->scribbleStorage = new \model\ScribbleStorage($settings);
+        $this->scribbleView  = new \view\ScribbleView();
+        // TODO behövs kanske inte för denna fil används till detta
         // $this->mainController = new \controller\MainController();
         $this->loginController = new \controller\LoginController();
-        $this->scribbleController = new \controller\ScribbleController();
+        $this->scribbleController = new \controller\ScribbleController($this->scribbleView, $this->scribbleStorage);
 
-        $this->user = $this->userStorage->loadUser();
+        $this->user = $this->userStorage->getUser();
     }
 
 	public function run() {
@@ -38,22 +40,26 @@ class Application {
 		$this->generateOutput();
 	}
 	private function changeState() {
-		$this->loginController->checkForLoggedIn();
+        // return true or false
+		self::$userIsLoggedIn = $this->loginController->checkForLoggedIn();
         $this->userStorage->setUser($this->user);
-        // TODO om vi är inloggade kör scribblecontroller annars kör inte den
+        $this->scribbleView->setLoggedInState(self::$userIsLoggedIn, $this->user);
+         // TODO obs hårdkodat
+        if ($this->user == 'Pricken') {
+            $this->scribbleController->checkForNewScribble($this->user);
+        }
 	}
 	private function generateOutput() {
         $layoutView  = new \view\LayoutView();
 		$body = $layoutView->getBody();
         $title = $layoutView->getTitle();
-        // TODO kolla upp detta: Warning: mysqli_num_rows() expects parameter 1 to be mysqli_result, bool given in C:\xampp\htdocs\1dv610L3\model\ScribbleStorage.php on line 52
+        
         $data = $this->scribbleStorage->getSavedScribbles();
+        $this->scribbleView->setCollection($data);
  
         $loginView  = new \view\LoginView($title, $body);
-        $scribbleView  = new \view\ScribbleView($data, true);
-        // $pageView = new \View\HTMLPageView($title, $body);
 
         // TODO om man är inloggad kör en speciell view för scribbles
-        $layoutView->render($loginView, $scribbleView);
+        $layoutView->render($loginView, $this->scribbleView);
 	}
 }

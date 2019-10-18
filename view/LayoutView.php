@@ -9,7 +9,6 @@ class LayoutView {
   }
 
   public function getTitle() {
-    
   }
 
   public function render(LoginView $v, ScribbleView $sv) {

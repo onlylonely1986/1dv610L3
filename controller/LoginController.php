@@ -4,7 +4,7 @@ namespace controller;
 
 class LoginController {
 
-    public function checkForLoggedIn () {
-        
+    public function checkForLoggedIn () : bool {
+        return true;
     }
 }

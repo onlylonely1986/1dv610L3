@@ -10,6 +10,7 @@ class ScribbleStorage {
     private static $userName;
     private static $passWord;
     private static $dbName;
+    private static $dbTable;
     private static $conn;
 
     // Create connection
@@ -18,34 +19,53 @@ class ScribbleStorage {
         self::$userName = $settings->dbuserName;
         self::$passWord = $settings->dbpassWord;
         self::$dbName = $settings->dbName;
-        self::$conn = mysqli_connect(self::$serverName, self::$userName, self::$passWord, self::$dbName);
+        self::$dbTable = $settings->dbTableName;
 
-        // Check connection
+        self::$conn = $this->connect();
         if (self::$conn->connect_error) {
             die("Connection failed: " . self::$conn->connect_error);
         }
         // TODO: wronghandeling
-        echo "Connected successfully";
+        // echo "Connected successfully";
+    }
+    private function connect() {
+        self::$conn = new \mysqli(
+                self::$serverName,
+                self::$userName, 
+                self::$passWord, 
+                self::$dbName
+        );
+        if(self::$conn->connect_error) {
+            die("Connection failed: " . self::$conn->connect_error);
+        }
+        return self::$conn;
     }
         
     public function saveScribbles($scribbleItem) {
-        $sql = "INSERT INTO scribbleitem (user, title, text) 
-            VALUES ('$scribbleItem->user', '$scribbleItem->title', '$scribbleItem->text')";
+        $sql = "INSERT INTO `scribbleitem`";
+        $sql .= "(";
+        $sql .= "`user`, `title`, `text`";
+        $sql .= ")";
+        $sql .= "VALUES ";
+        $sql .= "(";
+        $sql .= "'".$scribbleItem->user."', ";
+        $sql .= "'".$scribbleItem->title."', ";
+        $sql .= "'".$scribbleItem->text."' ";
+        $sql .= ");";
 
         // TODO: wronghandeling
+        $results = self::$conn->query($sql);
         if (self::$conn->query($sql) === TRUE) {
             echo "New record created successfully";
         } else {
             echo "Error: " . $sql . "<br>" . self::$conn->error;
-        }
-
-        self::$conn->close();
+        }        
     }
 
     public function getSavedScribbles() : array {
         // TODO validation check connection to db
         try {
-            $sqli = "SELECT user, title, text FROM scribbleitem";
+        $sqli = "SELECT * FROM " . self::$dbTable;
             if($result = mysqli_query(self::$conn, $sqli)) {
                 echo "worked well";
             }
@@ -62,5 +82,9 @@ class ScribbleStorage {
             echo "Problems!! .... $e";
         }
         
+    }
+
+    public function closeConnection () {
+        self::$conn->close();
     }
 }

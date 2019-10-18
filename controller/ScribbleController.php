@@ -18,12 +18,32 @@ require_once('model/ScribbleCollection.php');
 
 class ScribbleController {
     private $collection;
+    private $view;
+    private $storage;
 
-    public function __construct() {
-        $scribbleItem = new \model\ScribbleItem("hej", "jag tycker om solen", "Lisa37");
-        $this->collection = new \model\ScribbleCollection();
-        $this->collection->addItem($scribbleItem);
-        return $this->collection->getCollection();
+    public function __construct($view, $storage) {
+        $this->view = $view;
+        $this->storage = $storage;
     }
 
+    public function checkForNewScribble($user) {
+        // TODO fixa meddelandefält som säger till om fälten är tomma att fylla i dem
+        // fixa trimning och htmlentities
+        if ($this->view->postNewScribble()) {
+			try {
+                var_dump($_POST);
+                // if(isset($_POST[])) {
+
+                // }
+                $item = new \model\ScribbleItem($_POST['title'], $_POST['text'], $user);
+                // $this->collection->addItem($scribbleItem);
+                // $this->storage->saveScribbles($item);
+                $_POST = [];
+			} catch (\Exception $e) {
+				$this->view->setNameWasTooShort();
+			}
+        } else {
+            echo ' no post no post ';
+        }   
+    }
 }
