@@ -22,18 +22,18 @@ class ScribbleSaver {
             die("Connection failed: " . self::$conn->connect_error);
         }
         // TODO: wronghandeling
-        // echo "Connected successfully";
+        echo "Connected successfully";
     }
         
     public function saveScribbles($scribbleItem) {
-        $sql = "INSERT INTO scribbleitem (user, title, text)
-        VALUES ('$scribbleItem->user', '$scribbleItem->title', '$scribbleItem->text')";
+        $sql = "INSERT INTO scribbleitem (user, title, text) 
+            VALUES ('$scribbleItem->user', '$scribbleItem->title', '$scribbleItem->text')";
 
         // TODO: wronghandeling
         if (self::$conn->query($sql) === TRUE) {
-            // echo "New record created successfully";
+            echo "New record created successfully";
         } else {
-            // echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "Error: " . $sql . "<br>" . self::$conn->error;
         }
 
         self::$conn->close();
@@ -41,24 +41,26 @@ class ScribbleSaver {
 
     public function getSavedScribbles() : array {
         // TODO validation check connection to db
-        $sqli = "SELECT user, title, text FROM scribbleitem";
-        $result = mysqli_query(self::$conn, $sqli);
-        $data = array();
-        
-        if(mysqli_num_rows($result) > 0) {
-            while($row = mysqli_fetch_assoc($result)) {
-                $data[] = $row;
+        try {
+            $sqli = "SELECT (user, title, text) FROM scribbleitem";
+            if($result = mysqli_query(self::$conn, $sqli)) {
+                // var_dump($result);
+                echo "worked well";
             }
-
-            // foreach($data as $d) {
-            //     echo $d['user'] . ": ";
-            //     echo $d['title'] . " ";
-            //    echo $d['text'] . "</br>";
-            // }
-
-            // $obj = new ScribbleCollection($data);
+            $data = array();
+            
+            if(mysqli_num_rows($result) > 0) {
+                while($row = mysqli_fetch_assoc($result)) {
+                    $data[] = $row;
+                }
+            }
+            mysqli_close(self::$conn);
+            // echo "everything worked well";
+            // var_dump($data);
+            return $data;
+        } catch (Exception $e) {
+            echo "Problems!! .... $e";
         }
-        return $data;
-        mysqli_close(self::$conn);
+        
     }
 }

@@ -38,18 +38,18 @@ class LoginView {
 		return '
 			<form method="POST" > 
 				<fieldset>
-					<legend>Login - enter Username and password</legend>
+					<legend>Logga in - ange användarnamn och lösenord</legend>
 					<p id="' . self::$messageId . '">' . $message . '</p>
 					
-					<label for="' . self::$name . '">Username :</label>
+					<label for="' . self::$name . '">Användarnamn:</label>
 					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->valueName . '" />
 
-					<label for="' . self::$password . '">Password :</label>
+					<label for="' . self::$password . '">Lösenord:</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" value="' . $this->valuePwd . '" />
 
-					<label for="' . self::$keep . '">Keep me logged in  :</label>
+					<label for="' . self::$keep . '">Håll mig inloggad :</label>
 					<input type="checkbox" id="' . self::$keep . '" name="' . self::$keep . '" />
-					<input type="submit" name="' . self::$login . '" value="login" />
+					<input type="submit" name="' . self::$login . '" value="Logga in" />
 				</fieldset>
 			</form>
 		';

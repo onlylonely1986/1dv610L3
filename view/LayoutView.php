@@ -40,16 +40,16 @@ class LayoutView {
 
   private function renderIsLoggedIn($isLoggedIn) {
     if(isset($_SESSION['loggedin'])) {
-      return '<h2>Logged in</h2>';
+      return '<h2>Inloggad</h2>';
     }
     else {
-      return '<h2>Not logged in</h2>';
+      return '<h2>Inte inloggad</h2>';
     }
   }
 
   private function renderRegisterNew($registerNew) {
     if ($registerNew) {
-      return '<h2>Register new user</h2>';
+      return '<h2>Registrera ny användare</h2>';
     }
     else {
       return '<h2></h2>';
