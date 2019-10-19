@@ -32,6 +32,11 @@ class LoginView {
 		return false;
 	}
 
+	public function setMessage(string $user) {
+		self::$message = "Registered new user.";
+		$this->valueName = $user;
+	}
+
 	public function bothFieldsFilled() : bool {
 		if (isset($_POST[self::$login])) {
 			if (isset($_POST[self::$name]) && isset($_POST[self::$password])) {

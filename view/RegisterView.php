@@ -69,7 +69,7 @@ class RegisterView {
     }
 
     public function createNewUser() {
-        echo "new user created";
+        $_SESSION['register'] = true;
     }
 
     public function wasNotPossibleToCreate() {

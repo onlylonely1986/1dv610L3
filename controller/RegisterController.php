@@ -7,6 +7,7 @@ require_once("model/User.php");
 class RegisterController {
     private $view;
     private $storage;
+    private $newUser;
 
     public function __construct(\view\RegisterView $view, \model\UserStorage $storage) {
         $this->view = $view;
@@ -22,33 +23,32 @@ class RegisterController {
                         $user = $this->view->returnNewUserName();
                         if($this->storage->checkForPossibleName($user)) {
                             $password = $this->view->returnNewPassword();
-                            $newUser = new \model\User($user, $password);
-                            var_dump($newUser->getName());
-                            var_dump($newUser->getPass());
-                            $this->storage->saveNewUserToDB($newUser);
+                            $this->setNewUser($user, $password);
+                            // TODO
+                            // hasch password
+                            $this->storage->saveNewUserToDB($this->newUser);
+                            // TODO vad ska hända här? nytt meddelande ska sättas i vyn och vyn ska ladda om med 
+                            // loginformulär ifyllda inputs
                             $this->view->createNewUser();
+                            return true;
                         } else {
-                            // kör nästa som kollar mot db "User exists, pick another username."
                             $this->view->wasNotPossibleToCreate();
+                            return false;
                         }
                     }
-                    return true;
                 } else {
                     return false;
                 }
             }
-                // TODO
-                // hasch password 
-                // create new user
-                // check if user is in userstorage
-                // save new user to db if everyting is ok
-                // $newUser = new \model\User($user, $password);
-                // if ($this->storage->getUserFromDB($newUser)) {
-                //    $this->view->loggedIn();
-                // } else {
-                //     $this->view->wrongNameorPass();
-                // }
         }
         return false;
+    }
+
+    private function setNewUser($user, $password) {
+        $this->newUser = new \model\User($user, $password);
+    }
+
+    public function getUserName() {
+        return $this->newUser->getName();
     }
 }

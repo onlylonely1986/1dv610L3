@@ -66,8 +66,24 @@ class UserStorage {
         return true;
     }
 
-    public function saveNewUserToDB() {
+    public function saveNewUserToDB(User $user) {
+        $sql = "INSERT INTO `users`";
+        $sql .= "(";
+        $sql .= "`username`, `password`";
+        $sql .= ")";
+        $sql .= "VALUES ";
+        $sql .= "(";
+        $sql .= "'". $user->getName() ."', ";
+        $sql .= "'". $user->getPass() ."'";
+        $sql .= ");";
 
+        // TODO: wronghandeling
+        $results = self::$conn->query($sql);
+        // TODO obs dublett med denna
+        // if (self::$conn->query($sql) === TRUE) {
+        // } else {
+        //    echo "Error: " . $sql . "<br>" . self::$conn->error;
+        // }    
     }
 
     public function getUser() {
