@@ -11,20 +11,25 @@ class LoginController {
         $this->storage = $storage;
     }
 
-    public function checkForLoggedIn () : bool {
-        $this->view->tryToLogin();
-        // TODO bättre namn!
-        if ($this->view->bothFieldsFilled()) {
-            $user = $this->view->getUserName();
-            $password = $this->view->getPassword();
-            $newUser = new \model\User($user, $password);
-            if ($this->storage->getUserFromDB($newUser)) {
-                $this->view->loggedIn();
-            } else {
-                $this->view->wrongNameorPass();
+    public function checkForLoggedIn () {
+        if($this->view->loggedOut()) {
+            return;
+        } else if ($this->view->loggedInReload()) {
+            return;
+        }
+        if ($this->view->tryToLogin()) {
+            // TODO bättre namn!
+            if ($this->view->bothFieldsFilled()) {
+                $user = $this->view->getUserName();
+                $password = $this->view->getPassword();
+                $newUser = new \model\User($user, $password);
+                if ($this->storage->getUserFromDB($newUser)) {
+                    $this->view->loggedIn();
+                } else {
+                    $this->view->wrongNameorPass();
+                }
             }
         }
-        return false;
     }
 
     public function getUserName() {

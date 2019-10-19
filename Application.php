@@ -38,8 +38,8 @@ class Application {
 	}
 	private function changeState() {
         // $this->user = $this->userStorage->getUser();
-		$this->userIsLoggedIn = $this->loginController->checkForLoggedIn();
-        $this->userStorage->setUser($this->user);
+        $this->userIsLoggedIn = $this->loginController->checkForLoggedIn();
+        
         // TODO obs hårdkodat obs visa bara scribbles om man är inloggad
         // $this->scribbleView->setLoggedInState(self::$userIsLoggedIn, $this->user);
         // if ($this->user == 'Pricken') {

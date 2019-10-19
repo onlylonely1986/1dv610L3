@@ -15,7 +15,7 @@ class LayoutView {
         <body>
           <h1>Assignment 2</h1>
           <a href="?register">Register a new user</a>
-          <h2>Not logged in</h2>
+          ' . $this->titleIsLoggedIn() . '
           <div class="container">
             ' . $v->echoHTML() . '
             ' . $dv->echoHTML() . '
@@ -42,7 +42,7 @@ class LayoutView {
           </div>
    */
 
-  private function renderIsLoggedIn($isLoggedIn) {
+  private function titleIsLoggedIn() {
     if(isset($_SESSION['loggedin'])) {
       return '<h2>Logged in</h2>';
     }

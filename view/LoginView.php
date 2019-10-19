@@ -16,20 +16,20 @@ class LoginView {
 	private $valuePwd = '';
 
 
-	public function tryToLogin() {
+	public function tryToLogin() : bool {
 		if (isset($_POST[self::$login])) {
-			// $this->valueName = $_POST[self::$name];
-			if (empty($_POST[self::$name]) || empty($_POST[self::$password])) {
+			$this->valueName = $_POST[self::$name];
+			if (empty($_POST[self::$name]) || (empty($_POST[self::$name]) && empty($_POST[self::$password]))) {
 				// TODO obs string dependecies!
 				self::$message .= 'Username is missing';
-			} else if (empty($_POST[self::$password])) {
+				return false;
+			} else if (isset($_POST[self::$name]) && empty($_POST[self::$password])) {
 				self::$message .= 'Password is missing';
+				return false;
 			}
-
-			// else if($_POST[self::$name] != 'Admin' || $_POST[self::$password] != 'Password') {
-			//	self::$message .= 'Wrong name or password';
-			// }
+			return true;
 		}
+		return false;
 	}
 
 	public function bothFieldsFilled() : bool {
@@ -55,6 +55,26 @@ class LoginView {
 
 	public function loggedIn() {
 		$_SESSION['loggedin'] = 'true';
+		$_SESSION['welcome'] = 'true';
+		self::$message = 'Welcome';
+	}
+
+	public function loggedInReload() : bool {
+		if(isset($_SESSION['loggedin']) && isset($_SESSION['welcome'])) {
+			self::$message = '';
+			unset($_SESSION['welcome']);
+			return true;
+		}
+		return false;
+	}
+
+	public function loggedOut() : bool {
+		if (isset($_POST[self::$logout]) && isset($_SESSION['loggedin'])) {
+			self::$message = 'Bye bye!';
+			unset($_SESSION['loggedin']);
+			return true;
+		}
+		return false;
 	}
 
 	public function wrongNameOrPass() {
