@@ -24,11 +24,8 @@ class RegisterController {
                         if($this->storage->checkForPossibleName($user)) {
                             $password = $this->view->returnNewPassword();
                             $this->setNewUser($user, $password);
-                            // TODO
-                            // hasch password
+                            // TODO hasch password
                             $this->storage->saveNewUserToDB($this->newUser);
-                            // TODO vad ska hända här? nytt meddelande ska sättas i vyn och vyn ska ladda om med 
-                            // loginformulär ifyllda inputs
                             $this->view->createNewUser();
                             return true;
                         } else {
@@ -36,8 +33,6 @@ class RegisterController {
                             return false;
                         }
                     }
-                } else {
-                    return false;
                 }
             }
         }

@@ -67,7 +67,8 @@ class UserStorage {
     }
 
     public function saveNewUserToDB(User $user) {
-        $sql = "INSERT INTO `users`";
+        $this->connect();
+        $sql = "INSERT INTO " . self::$dbTable;
         $sql .= "(";
         $sql .= "`username`, `password`";
         $sql .= ")";
@@ -78,7 +79,7 @@ class UserStorage {
         $sql .= ");";
 
         // TODO: wronghandeling
-        $results = self::$conn->query($sql);
+        self::$conn->query($sql);
         // TODO obs dublett med denna
         // if (self::$conn->query($sql) === TRUE) {
         // } else {

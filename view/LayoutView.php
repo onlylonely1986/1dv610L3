@@ -44,8 +44,12 @@ class LayoutView {
 
   private function title() {
     if (isset($_SESSION['register']) && isset($_GET['register'])) {
-      return '<a href="?register">Register a new user</a>
+      if(isset($_SESSION['loggedin'])) {
+        return '<h2>Logged in</h2>';
+      } else {
+        return '<a href="?register">Register a new user</a>
               <h2>Not logged in</h2>';
+      }
     } else if (isset($_GET['register'])) {
       return '<a href="?">Back to login</a>
                 <h2>Register new member</h2>';
@@ -60,7 +64,6 @@ class LayoutView {
 
   private function body(LoginView $v, RegisterView $rv) {
     if (isset($_SESSION['register']) && isset($_GET['register'])){
-      unset($_SESSION['register']);
       return $v->echoHTML();
     } else if (isset($_GET['register'])) {
       return $rv->echoHTML();
