@@ -53,8 +53,21 @@ class UserStorage {
         return false;
     }
 
-    public function checkForPossibleName() {
-        // TODO kolla mot db om username finns där sen innan
+    public function checkForPossibleName(string $username) : bool {
+        $query = "SELECT * FROM " . self::$dbTable;
+        if ($result = self::$conn->query($query)) {
+            while ($row = $result->fetch_row()) {
+                if ($row[0] == $username) {
+                    return false;
+                }
+            }
+            $result->close();
+        }
+        return true;
+    }
+
+    public function saveNewUserToDB() {
+
     }
 
     public function getUser() {

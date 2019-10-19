@@ -19,8 +19,13 @@ class RegisterController {
             if($this->view->hitButton()) {
                 if($this->view->isAllFieldsFilled()) {
                     if($this->view->validateInputs()) {
-                        $newUser = new \model\User($user, $password);
-                        if($this->storage->checkForPossibleName()) {
+                        $user = $this->view->returnNewUserName();
+                        if($this->storage->checkForPossibleName($user)) {
+                            $password = $this->view->returnNewPassword();
+                            $newUser = new \model\User($user, $password);
+                            var_dump($newUser->getName());
+                            var_dump($newUser->getPass());
+                            $this->storage->saveNewUserToDB($newUser);
                             $this->view->createNewUser();
                         } else {
                             // kör nästa som kollar mot db "User exists, pick another username."

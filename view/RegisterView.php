@@ -59,7 +59,7 @@ class RegisterView {
             self::$message .= 'Passwords do not match.';
             return false;
         }
-        // not allowed characters
+
         if(preg_match('/[^A-Za-z0-9]/', $_POST[self::$name])) {
             self::$message .= 'Username contains invalid characters.';
             self::$testName = strip_tags ($_POST[self::$name]);
@@ -74,6 +74,14 @@ class RegisterView {
 
     public function wasNotPossibleToCreate() {
         self::$message .= 'User exists, pick another username.';
+    }
+
+    public function returnNewUserName() {
+        return $_POST[self::$name];
+    }
+
+    public function returnNewPassword() {
+        return $_POST[self::$password];
     }
 
 	public function showLink($registerNew) {
