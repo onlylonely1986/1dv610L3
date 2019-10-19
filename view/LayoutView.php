@@ -11,7 +11,7 @@ class LayoutView {
   public function getTitle() {
   }
 
-  public function render(LoginView $v, ScribbleView $sv) {
+  public function render(LoginView $v, DateTimeView $dv, ScribbleView $sv) {
 
     echo '<!DOCTYPE html>
       <html>
@@ -24,6 +24,7 @@ class LayoutView {
           <h1>Logga in</h1>
           <div class="container">
             ' . $v->echoHTML() . '
+            ' . $dv->echoHTML() . '
           </div>
           <div class="container2">
             ' . $sv->echoHTML() . '
