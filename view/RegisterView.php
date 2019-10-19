@@ -27,12 +27,14 @@ class RegisterView {
 
     public function isAllFieldsFilled() : bool {
         if (isset($_POST[self::$register])) {
-            self::$testName = $_POST[self::$name];
-            if (empty($_POST[self::$name]) && empty($_POST[self::$password])) {
+            if (empty($_POST[self::$passwordRepeat])) {
+                self::$message .= 'Password has too few characters, at least 6 characters.';
+            }
+            if ((empty($_POST[self::$name]) && empty($_POST[self::$password])) || empty($_POST[self::$name])) {
                 self::$message .= 'Username has too few characters, at least 3 characters.';
                 return false;
             }
-            if (empty($_POST[self::$password]) && empty($_POST[self::$passwordRepeat])) {
+            if (empty($_POST[self::$password]) || empty($_POST[self::$passwordRepeat])) {
                 self::$message .= 'Password has too few characters, at least 6 characters.';
                 return false;
             }
