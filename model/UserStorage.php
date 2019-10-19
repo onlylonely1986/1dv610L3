@@ -53,6 +53,10 @@ class UserStorage {
         return false;
     }
 
+    public function checkForPossibleName() {
+        // TODO kolla mot db om username finns där sen innan
+    }
+
     public function getUser() {
         return 'Pricken';
     }
