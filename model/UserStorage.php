@@ -25,6 +25,8 @@ class UserStorage {
         }
     }
 
+    // TODO sql injections
+    // use prepered statements
     private function connect() {
         self::$conn = new \mysqli(
                 self::$serverName,

@@ -12,11 +12,15 @@ class LoginController {
     }
 
     public function checkForLoggedIn () {
+        
         if($this->view->loggedOut()) {
             return;
-        } else if ($this->view->loggedInReload()) {
+        } else if($this->view->loginWithCookies()) {
+            return;
+        }else if ($this->view->loggedInReload()) {
             return;
         }
+
         if ($this->view->tryToLogin()) {
             // TODO bättre namn!
             if ($this->view->bothFieldsFilled()) {

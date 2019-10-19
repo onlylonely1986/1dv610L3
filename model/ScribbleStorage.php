@@ -40,7 +40,8 @@ class ScribbleStorage {
         }
         return self::$conn;
     }
-        
+    // TODO sql injections
+    // use prepered statements
     public function saveScribbles($scribbleItem) {
         $sql = "INSERT INTO `scribbleitem`";
         $sql .= "(";

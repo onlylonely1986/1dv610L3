@@ -53,10 +53,27 @@ class LoginView {
 		}
 	}
 
+	public function loginWithCookies() : bool {
+		if(isset($_COOKIE[self::$cookieName]) && !(isset($_SESSION['welcome']))) {
+			$_SESSION['loggedin'] = true;
+			$_SESSION['welcome'] = true;
+			self::$message = "Welcome back with cookie";
+			return true;
+		}
+		return false;
+	}
+
 	public function loggedIn() {
-		$_SESSION['loggedin'] = 'true';
-		$_SESSION['welcome'] = 'true';
+		$_SESSION['loggedin'] = true;
+		$_SESSION['welcome'] = true;
 		self::$message = 'Welcome';
+		if(isset($_POST[self::$login]) && isset($_POST[self::$keep])) {
+			$this->saveCookie();
+		}
+	}
+
+	private function saveCookie() {
+		setcookie(self::$cookieName, self::$cookiePassword, time()+3600);
 	}
 
 	public function loggedInReload() : bool {
