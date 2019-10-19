@@ -4,7 +4,7 @@ namespace view;
 
 class LayoutView {
   
-  public function render(LoginView $v, DateTimeView $dv, ScribbleView $sv) {
+  public function render(LoginView $v, RegisterView $rv, DateTimeView $dv, ScribbleView $sv) {
 
     echo '<!DOCTYPE html>
       <html>
@@ -14,10 +14,9 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
-          <a href="?register">Register a new user</a>
-          ' . $this->titleIsLoggedIn() . '
+          ' . $this->title() . '
           <div class="container">
-            ' . $v->echoHTML() . '
+            ' . $this->body($v, $rv) . '
             ' . $dv->echoHTML() . '
           </div>
           
@@ -42,21 +41,26 @@ class LayoutView {
           </div>
    */
 
-  private function titleIsLoggedIn() {
-    if(isset($_SESSION['loggedin'])) {
+
+  private function title() {
+    if (isset($_GET['register'])) {
+      return '<a href="?">Back to login</a>
+                <h2>Register new member</h2>';
+    } else if(isset($_SESSION['loggedin'])) {
       return '<h2>Logged in</h2>';
     }
     else {
-      return '<h2>Not logged in</h2>';
+      return '<a href="?register">Register a new user</a>
+              <h2>Not logged in</h2>';
     }
   }
 
-  private function renderRegisterNew($registerNew) {
-    if ($registerNew) {
-      return '<h2>Register new member</h2>';
-    }
-    else {
-      return '<h2></h2>';
+  private function body(LoginView $v, RegisterView $rv) {
+    
+    if (isset($_GET['register'])) {
+      return $rv->echoHTML();
+    } else {
+      return $v->echoHTML();
     }
   }
 }

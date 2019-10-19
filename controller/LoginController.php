@@ -5,6 +5,8 @@ namespace controller;
 require_once("model/User.php");
 
 class LoginController {
+    private $view;
+    private $storage;
 
     public function __construct(\view\LoginView $view, \model\UserStorage $storage) {
         $this->view = $view;
