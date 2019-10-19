@@ -1,38 +1,34 @@
-<?php
+<?php 
 
 namespace view;
 
 class LayoutView {
   
-  public function getBody() {
-
-  }
-
-  public function getTitle() {
-  }
-
   public function render(LoginView $v, DateTimeView $dv, ScribbleView $sv) {
 
     echo '<!DOCTYPE html>
       <html>
         <head>
-          <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
-          <title>Klotterplanket</title>
+            <meta charset="utf-8">
+            <title>Login Example</title>
         </head>
         <body>
-          <h1>KLOTTERPLANKET</h1>
-          <h1>Logga in</h1>
+          <h1>Assignment 2</h1>
+          <a href="?register">Register a new user</a>
+          <h2>Not logged in</h2>
           <div class="container">
             ' . $v->echoHTML() . '
             ' . $dv->echoHTML() . '
           </div>
-          <div class="container2">
-            ' . $sv->echoHTML() . '
-          </div>
+          
          </body>
       </html>
     ';
-  }
+  } /** <div class="container2">
+            <h1>SCRIBBLEBOARD</h1>
+            ' . $sv->echoHTML() . '
+          </div>
+    */
   /**
    *             ' . $this->renderIsLoggedIn($isLoggedIn) . '
             ' . $rv->showLink($showRegView) . '
@@ -48,16 +44,16 @@ class LayoutView {
 
   private function renderIsLoggedIn($isLoggedIn) {
     if(isset($_SESSION['loggedin'])) {
-      return '<h2>Inloggad</h2>';
+      return '<h2>Logged in</h2>';
     }
     else {
-      return '<h2>Inte inloggad</h2>';
+      return '<h2>Not logged in</h2>';
     }
   }
 
   private function renderRegisterNew($registerNew) {
     if ($registerNew) {
-      return '<h2>Registrera ny användare</h2>';
+      return '<h2>Register new member</h2>';
     }
     else {
       return '<h2></h2>';

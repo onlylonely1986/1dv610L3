@@ -21,19 +21,15 @@ class Application {
     private $layoutView;
     private $loginView;
     private $scribbleView;
-    private static $userIsLoggedIn;
+    private $userIsLoggedIn;
     
     public function __construct($settings) {
-
         $this->userStorage = new \model\UserStorage($settings);
         $this->scribbleStorage = new \model\ScribbleStorage($settings);
         $this->scribbleView  = new \view\ScribbleView();
-        // TODO behövs kanske inte för denna fil används till detta
-        // $this->mainController = new \controller\MainController();
-        $this->loginController = new \controller\LoginController();
+        $this->loginView  = new \view\LoginView();
+        $this->loginController = new \controller\LoginController($this->loginView, $this->userStorage);
         $this->scribbleController = new \controller\ScribbleController($this->scribbleView, $this->scribbleStorage);
-
-        $this->user = $this->userStorage->getUser();
     }
 
 	public function run() {
@@ -41,27 +37,23 @@ class Application {
 		$this->generateOutput();
 	}
 	private function changeState() {
-        // return true or false
-		self::$userIsLoggedIn = $this->loginController->checkForLoggedIn();
+        // $this->user = $this->userStorage->getUser();
+		$this->userIsLoggedIn = $this->loginController->checkForLoggedIn();
         $this->userStorage->setUser($this->user);
-        $this->scribbleView->setLoggedInState(self::$userIsLoggedIn, $this->user);
-         // TODO obs hårdkodat
-        if ($this->user == 'Pricken') {
-            $this->scribbleController->checkForNewScribble($this->user);
-        }
+        // TODO obs hårdkodat obs visa bara scribbles om man är inloggad
+        // $this->scribbleView->setLoggedInState(self::$userIsLoggedIn, $this->user);
+        // if ($this->user == 'Pricken') {
+        //    $this->scribbleController->checkForNewScribble($this->user);
+        // }
 	}
 	private function generateOutput() {
         $layoutView  = new \view\LayoutView();
-		$body = $layoutView->getBody();
-        $title = $layoutView->getTitle();
         
-        $data = $this->scribbleStorage->getSavedScribbles();
-        $this->scribbleView->setCollection($data);
- 
-        $loginView  = new \view\LoginView($title, $body);
+        // $data = $this->scribbleStorage->getSavedScribbles();
+        // $this->scribbleView->setCollection($data);        
         $dateView  = new \view\DateTimeView();
 
         // TODO om man är inloggad kör en speciell view för scribbles
-        $layoutView->render($loginView, $dateView, $this->scribbleView);
+        $layoutView->render($this->loginView, $dateView, $this->scribbleView);
 	}
 }

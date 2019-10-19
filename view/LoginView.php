@@ -12,9 +12,54 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 	private static $message = '';
-	public $valueName = '';
-	public $valuePwd = '';
+	private $valueName = '';
+	private $valuePwd = '';
 
+
+	public function tryToLogin() {
+		if (isset($_POST[self::$login])) {
+			// $this->valueName = $_POST[self::$name];
+			if (empty($_POST[self::$name]) || empty($_POST[self::$password])) {
+				// TODO obs string dependecies!
+				self::$message .= 'Username is missing';
+			} else if (empty($_POST[self::$password])) {
+				self::$message .= 'Password is missing';
+			}
+
+			// else if($_POST[self::$name] != 'Admin' || $_POST[self::$password] != 'Password') {
+			//	self::$message .= 'Wrong name or password';
+			// }
+		}
+	}
+
+	public function bothFieldsFilled() : bool {
+		if (isset($_POST[self::$login])) {
+			if (isset($_POST[self::$name]) && isset($_POST[self::$password])) {
+				return true;
+			}
+		}
+		else return false;
+	}
+
+	public function getUsername() : string {
+		if (isset($_POST[self::$name]) && isset($_POST[self::$password])) {
+			return $_POST[self::$name];
+		}
+	}
+
+	public function getPassword() : string {
+		if (isset($_POST[self::$name]) && isset($_POST[self::$password])) {
+			return $_POST[self::$password];
+		}
+	}
+
+	public function loggedIn() {
+		$_SESSION['loggedin'] = 'true';
+	}
+
+	public function wrongNameOrPass() {
+		self::$message = 'Wrong name or password';
+	}
 
     /**
 	 * Create HTTP response
@@ -24,7 +69,11 @@ class LoginView {
 	 * @return  void BUT writes to standard output and cookies!
 	 */
 	public function echoHTML() {
-        $response = $this->generateLoginFormHTML();
+		if (isset($_SESSION['loggedin'])) {
+			$response = $this->generateLogoutButtonHTML();
+		} else {
+			$response = $this->generateLoginFormHTML();
+		}
         return $response;
 	}
 
@@ -39,7 +88,7 @@ class LoginView {
 			<form method="POST" > 
 				<fieldset>
 					<legend>Logga in - ange användarnamn och lösenord</legend>
-					<p id="' . self::$messageId . '">' . $message . '</p>
+					<p id="' . self::$messageId . '">' . self::$message . '</p>
 					
 					<label for="' . self::$name . '">Användarnamn:</label>
 					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->valueName . '" />
@@ -60,10 +109,10 @@ class LoginView {
 	* @param $message, String output message
 	* @return  void, BUT writes to standard output!
 	*/
-	private function generateLogoutButtonHTML($message) {
+	private function generateLogoutButtonHTML() {
 		return '
 			<form  method="post" >
-				<p id="' . self::$messageId . '">' . $message .'</p>
+				<p id="' . self::$messageId . '">' . self::$message .'</p>
 				<input type="submit" name="' . self::$logout . '" value="Logga ut"/>
 			</form>
 		';

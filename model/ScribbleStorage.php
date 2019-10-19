@@ -67,7 +67,7 @@ class ScribbleStorage {
         try {
         $sqli = "SELECT * FROM " . self::$dbTable;
             if($result = mysqli_query(self::$conn, $sqli)) {
-                echo "worked well";
+                // echo "worked well";
             }
 
             $data = array();

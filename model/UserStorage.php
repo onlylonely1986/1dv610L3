@@ -18,6 +18,37 @@ class UserStorage {
         self::$passWord = $settings->dbpassWord;
         self::$dbName = $settings->dbName;
         self::$dbTable = $settings->dbTableNameUsers;
+
+        self::$conn = $this->connect();
+        if (self::$conn->connect_error) {
+            die("Connection failed: " . self::$conn->connect_error);
+        }
+    }
+
+    private function connect() {
+        self::$conn = new \mysqli(
+                self::$serverName,
+                self::$userName, 
+                self::$passWord, 
+                self::$dbName
+        );
+        if(self::$conn->connect_error) {
+            die("Connection failed: " . self::$conn->connect_error);
+        }
+        return self::$conn;
+    }
+
+    public function getUserFromDB(User $newUser) {
+        $query = "SELECT * FROM " . self::$dbTable;
+        if ($result = self::$conn->query($query)) {
+            while ($row = $result->fetch_row()) {
+                if ($row[0] == $newUser->getName() && $row[1] == $newUser->getPass()) {
+                    return true;
+                }
+            }
+            $result->close();
+        }
+        return false;
     }
 
     public function getUser() {

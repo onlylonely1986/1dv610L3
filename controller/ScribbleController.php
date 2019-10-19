@@ -31,10 +31,6 @@ class ScribbleController {
         // fixa trimning och htmlentities
         if ($this->view->postNewScribble()) {
 			try {
-                var_dump($_POST);
-                // if(isset($_POST[])) {
-
-                // }
                 $item = new \model\ScribbleItem($_POST['title'], $_POST['text'], $user);
                 // $this->collection->addItem($scribbleItem);
                 // $this->storage->saveScribbles($item);
@@ -43,7 +39,7 @@ class ScribbleController {
 				$this->view->setNameWasTooShort();
 			}
         } else {
-            echo ' no post no post ';
+            // echo ' no post no post ';
         }   
     }
 }
