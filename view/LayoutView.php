@@ -21,10 +21,10 @@ class LayoutView {
       <html>
         <head>
             <meta charset="utf-8">
-            <title>Login Example</title>
+            <title>Scribbles</title>
         </head>
         <body>
-          <h1>Assignment 2</h1>
+          <h1>SCRIBBLEBOARD</h1>
           ' . $this->title() . '
           <div class="container">
             ' . $this->body($v, $rv) . '

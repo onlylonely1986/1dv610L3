@@ -2,6 +2,8 @@
 
 namespace view;
 
+require_once("Messages.php");
+
 class RegisterView {
     private static $name = 'RegisterView::UserName';
     private static $password = 'RegisterView::Password';
@@ -28,18 +30,18 @@ class RegisterView {
     public function isAllFieldsFilled() : bool {
         if (isset($_POST[self::$register])) {
             if (empty($_POST[self::$passwordRepeat])) {
-                self::$message .= 'Password has too few characters, at least 6 characters.';
+                self::$message .= Messages::$toShortPass;
             }
             if ((empty($_POST[self::$name]) && empty($_POST[self::$password])) || empty($_POST[self::$name])) {
-                self::$message .= 'Username has too few characters, at least 3 characters.';
+                self::$message .= Messages::$toShortName;
                 return false;
             }
             if (empty($_POST[self::$password]) || empty($_POST[self::$passwordRepeat])) {
-                self::$message .= 'Password has too few characters, at least 6 characters.';
+                self::$message .= Messages::$toShortPass;
                 return false;
             }
             if ($_POST[self::$name] == self::$testName && empty($_POST[self::$password])) {
-                self::$message = 'Password has too few characters, at least 6 characters.';
+                self::$message = Messages::$toShortPass;
                 return false;
             } 
             return true;
@@ -50,20 +52,20 @@ class RegisterView {
     public function validateInputs() : bool {
         self::$testName = $_POST[self::$name];
         if(strlen($_POST[self::$name]) < 4) {
-            self::$message = 'Username has too few characters, at least 3 characters.';
+            self::$message = Messages::$toShortName;
             return false;
         }
         if(strlen($_POST[self::$password]) < 7 || strlen($_POST[self::$passwordRepeat]) < 7 ) {
-            self::$message .= 'Password has too few characters, at least 6 characters.';
+            self::$message .= Messages::$toShortPass;
             return false;
         }
         if($_POST[self::$password] != $_POST[self::$passwordRepeat]) {
-            self::$message .= 'Passwords do not match.';
+            self::$message .= Messages::$passNotMatch;
             return false;
         }
 
         if(preg_match('/[^A-Za-z0-9]/', $_POST[self::$name])) {
-            self::$message .= 'Username contains invalid characters.';
+            self::$message .= Messages::$invalidChars;
             self::$testName = strip_tags ($_POST[self::$name]);
             return false;
         }
@@ -71,7 +73,7 @@ class RegisterView {
     }
 
     public function wasNotPossibleToCreate() {
-        self::$message .= 'User exists, pick another username.';
+        self::$message .= Messages::$userExists;
     }
 
     public function returnNewUserName() {
@@ -81,24 +83,6 @@ class RegisterView {
     public function returnNewPassword() {
         return $_POST[self::$password];
     }
-    /** 
-	public function showLink($registerNew) {
-        if(isset($_SESSION['loggedin'])) {
-            return;
-        } else {
-            if ($registerNew) {
-                return '
-                    <a href="?">Back to login</a>
-                    <br/>               
-                ';
-            } else {
-                return '
-                    <a href="?register">Register a new user</a> 
-                ';
-            }
-        }
-    }
-    */
     
     /** 
 	* Generate HTML code on the output buffer for the logout button
@@ -128,36 +112,5 @@ class RegisterView {
 				</fieldset>
 			</form>
 		';
-    }
-    
-    public function  doRegistration() {
-        $registration = false;
-        // self::$testName == 'user1abfb19a4b';
-        if (isset($_POST[self::$register])) {
-            // self::$testName == 'user1abfb19a4b';
-            
-            if (empty($_POST[self::$name]) && empty($_POST[self::$password])) {
-                self::$message .= 'Username has too few characters, at least 3 characters.';
-            }
-            if (empty($_POST[self::$password]) && empty($_POST[self::$passwordRepeat])) {
-                self::$message .= 'Password has too few characters, at least 6 characters.';
-            }
-            if ($_POST[self::$name] == 'Admin') {
-                self::$message .= 'User exists, pick another username.';
-            }
-            // self::$testName == 'user1abfb19a4b';
-            // if (self::$testName == 'user1abfb19a4b' && empty($_POST[self::$password])) {
-            //    self::$message = 'Password has too few characters, at least 6 characters.';
-            // } 
-            // TODO fel 4.4 skapa en användare med detta anv.namn men inget lösen, ge felmeddelande
-            // if (($_POST[self::$name]) == 'user1abfb19a4b' && empty($_POST[self::$password])) {
-            //    self::$message = 'Password has too few characters, at least 6 characters.';
-            // }
-            
-            
-        } else {
-            self::$message = '';
-        }
-        return $registration;
     }
 }

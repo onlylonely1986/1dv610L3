@@ -57,18 +57,32 @@ class Application {
             $this->loginView->registerNewMessage($this->username);
             $this->layoutView->setRegisterState($this->session->checkRegisterSession());
         } else if($this->loginController->checkForLoggedIn()) {
-            if($this->session->checkRegisterSession()) {
-                $this->session->unsetRegisterSession();
-            }
-            $this->username = $this->session->getUserName();
-            $this->loginView->setLoggedinState($this->username);
-            $this->scribbleView->setLoggedinState($this->username);
-            $this->layoutView->setLoggedinState($this->session->checkLoggedinSession());
-            $this->scribbleController->checkForNewScribble($this->username);
+            $this->registrationStates();
+            $this->setSessionStates();
         } else if($this->session->checkLoggedinSession()) {
-            $this->layoutView->setLoggedinState($this->session->checkLoggedinSession());
-            $this->username = $this->session->getUserName();
+            if($this->session->checkLoggedinAndWelcomeSession()) {
+                $this->session->unsetWelcomeSession();
+            }
+            $this->registrationStates();
+            $this->setSessionStates();
         }
+    }
+
+    private function registrationStates() {
+        echo "när körs denna?";
+        var_dump($_SESSION);
+        if($this->session->checkRegisterSession()) {
+            $this->session->unsetRegisterSession();
+        }
+        $this->layoutView->setRegisterState($this->session->checkRegisterSession());
+    }
+
+    private function setSessionStates () {
+        $this->username = $this->session->getUserName();
+        $this->loginView->setLoggedinState($this->username);
+        $this->scribbleView->setLoggedinState($this->username);
+        $this->layoutView->setLoggedinState($this->session->checkLoggedinSession());
+        $this->scribbleController->checkForNewScribble($this->username);
     }
 
 	private function generateOutput() {

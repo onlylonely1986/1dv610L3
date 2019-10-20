@@ -47,6 +47,13 @@ class SessionModel {
        return false;
     }
 
+    public function checkLoggedinAndWelcomeSession() : bool {
+        if (isset($_SESSION[self::$isLoggedIn]) && isset($_SESSION[self::$welcome])) {
+            return true;
+        }
+        return false;
+    }
+
     public function checkLoggedinSession() : bool {
         if (isset($_SESSION[self::$isLoggedIn])) {
             return true;

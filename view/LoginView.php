@@ -2,6 +2,8 @@
 
 namespace view;
 
+require_once("Messages.php");
+
 class LoginView {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
@@ -15,16 +17,14 @@ class LoginView {
 	private $valueName = '';
 	private $valuePwd = '';
 
-
 	public function tryToLogin() : bool {
 		if (isset($_POST[self::$login])) {
 			$this->valueName = $_POST[self::$name];
 			if (empty($_POST[self::$name]) || (empty($_POST[self::$name]) && empty($_POST[self::$password]))) {
-				// TODO obs string dependecies!
-				self::$message .= 'Username is missing';
+				self::$message .= Messages::$missName;
 				return false;
 			} else if (isset($_POST[self::$name]) && empty($_POST[self::$password])) {
-				self::$message .= 'Password is missing';
+				self::$message .= Messages::$missPass;
 				return false;
 			}
 			return true;
@@ -33,7 +33,7 @@ class LoginView {
 	}
 
 	public function registerNewMessage(string $user) {
-		self::$message = "Registered new user.";
+		self::$message = Messages::$registerNew;
 		$this->valueName = $user;
 	}
 
@@ -60,15 +60,14 @@ class LoginView {
 
 	public function loginWithCookies($isSessionWelcome) : bool {
 		if(isset($_COOKIE[self::$cookieName]) && !$isSessionWelcome) {
-			echo "när har vi cookie då?";
-			self::$message = "Welcome back with cookie";
+			self::$message = Messages::$welcomeCookie;
 			return true;
 		}
 		return false;
 	}
 
 	public function loggedIn() {
-		self::$message = 'Welcome';
+		self::$message =  Messages::$welcome;
 		$this->valueName = $_POST[self::$name];
 		if(isset($_POST[self::$login]) && isset($_POST[self::$keep])) {
 			$this->saveCookie();
@@ -80,7 +79,7 @@ class LoginView {
 	  }
 
 	private function saveCookie() {
-		setcookie($this->valueName, self::$cookiePassword, time()+3600);
+		setcookie(self::$cookieName, self::$cookiePassword, time()+3600);
 	}
 
 	public function loggedInReload() {
@@ -89,14 +88,15 @@ class LoginView {
 
 	public function loggedOut($sessionLoggedIn) : bool {
 		if (isset($_POST[self::$logout]) && $sessionLoggedIn) {
-			self::$message = 'Bye bye!';
+			setcookie(self::$cookieName, "", time()-3600);
+			self::$message = Messages::$bye;
 			return true;
 		}
 		return false;
 	}
 
 	public function wrongNameOrPass() {
-		self::$message = 'Wrong name or password';
+		self::$message = Messages::$wrongNameOrPass;
 	}
 
     /**
@@ -124,18 +124,18 @@ class LoginView {
 		return '
 			<form method="POST" > 
 				<fieldset>
-					<legend>Logga in - ange användarnamn och lösenord</legend>
+					<legend>Login - enter username and password</legend>
 					<p id="' . self::$messageId . '">' . self::$message . '</p>
 					
-					<label for="' . self::$name . '">Användarnamn:</label>
+					<label for="' . self::$name . '">Username:</label>
 					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->valueName . '" />
 
-					<label for="' . self::$password . '">Lösenord:</label>
+					<label for="' . self::$password . '">Passwword:</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" value="' . $this->valuePwd . '" />
 
-					<label for="' . self::$keep . '">Håll mig inloggad :</label>
+					<label for="' . self::$keep . '">Keep me logged in:</label>
 					<input type="checkbox" id="' . self::$keep . '" name="' . self::$keep . '" />
-					<input type="submit" name="' . self::$login . '" value="Logga in " />
+					<input type="submit" name="' . self::$login . '" value="login " />
 				</fieldset>
 			</form>
 		';
@@ -150,7 +150,7 @@ class LoginView {
 		return '
 			<form  method="post" >
 				<p id="' . self::$messageId . '">' . self::$message .'</p>
-				<input type="submit" name="' . self::$logout . '" value="Logga ut"/>
+				<input type="submit" name="' . self::$logout . '" value="logout"/>
 			</form>
 		';
 	}
