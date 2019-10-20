@@ -2,7 +2,6 @@
 
 require_once("model/UserStorage.php");
 require_once("model/ScribbleStorage.php");
-require_once("model/ScribbleCollection.php");
 require_once("model/SessionModel.php");
 require_once("controller/LoginController.php");
 require_once("controller/RegisterController.php");
@@ -21,12 +20,12 @@ class Application {
     private $loginController;
     private $registerController;
     private $scribbleController;
-	private $username; 
+	private $username;
     private $layoutView;
     private $loginView;
     private $scribbleView;
     private $userIsLoggedIn;
-    
+
     public function __construct($settings) {
         $this->userStorage = new \model\UserStorage($settings);
         $this->scribbleStorage = new \model\ScribbleStorage($settings);
@@ -52,7 +51,6 @@ class Application {
     }
 
 	private function changeState() {
-        
         if ($this->registerController->newRegistration()) {
             $this->username = $this->registerController->getUserName();
             $this->loginView->registerNewMessage($this->username);
@@ -81,9 +79,6 @@ class Application {
         $this->loginView->setLoggedinState($this->username);
         $this->scribbleView->setLoggedinState($this->username);
         $this->layoutView->setLoggedinState($this->session->checkLoggedinSession());
-        if ($this->scribbleController->isThereNewScribble()) {
-            echo "ny scribble ny scribble";
-        } 
         $this->scribbleController->checkForNewScribble($this->username);
     }
 
@@ -91,8 +86,6 @@ class Application {
         $data = $this->scribbleStorage->getSavedScribbles();
         $this->scribbleView->setCollection($data);        
         $dateView  = new \view\DateTimeView();
-
-        // TODO om man är inloggad kör en speciell view för scribbles
         $this->layoutView->render($this->loginView, $this->registerView, $dateView, $this->scribbleView);
 	}
 }

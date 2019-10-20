@@ -11,7 +11,9 @@ class UserStorage {
     private static $conn;
 
     private static $user;
-
+    
+    // TODO do an abstract class for storage and let the two storages inherit from it
+    // TODO create kind of facade so I do not let other classes know about how I save things
     public function __construct($settings) {
         self::$serverName = $settings->dbserverName;
         self::$userName = $settings->dbuserName;
@@ -19,25 +21,29 @@ class UserStorage {
         self::$dbName = $settings->dbName;
         self::$dbTable = $settings->dbTableNameUsers;
 
-        self::$conn = $this->connect();
-        if (self::$conn->connect_error) {
-            die("Connection failed: " . self::$conn->connect_error);
+        try {
+            self::$conn = $this->connect();
+        // TODO write more specific exeptions for specific problems
+        } catch (Exception $e){
+            self::$conn->connect_error;
+            die("Connection failed: " . $e . "  " . self::$conn->connect_error);
         }
     }
 
-    // TODO sql injections
-    // use prepered statements
+    // TODO avoid sql injections and use prepered statements
+    // TODO avoid repeating code in different classes (ScribbleStorage)
     private function connect() {
-        self::$conn = new \mysqli(
+        try {
+            self::$conn = new \mysqli(
                 self::$serverName,
                 self::$userName, 
                 self::$passWord, 
                 self::$dbName
-        );
-        if(self::$conn->connect_error) {
-            die("Connection failed: " . self::$conn->connect_error);
+            );
+            return self::$conn; 
+        } catch(Exception $e) {
+            die("Connection failed: " . $e . "  " . self::$conn->connect_error);
         }
-        return self::$conn;
     }
 
     public function getUserFromDB(User $newUser) {
@@ -82,20 +88,10 @@ class UserStorage {
         $sql .= "'". $hashPwd ."'";
         $sql .= ");";
 
-        // TODO: wronghandeling
-        self::$conn->query($sql);
-        // TODO obs dublett med denna
-        // if (self::$conn->query($sql) === TRUE) {
-        // } else {
-        //    echo "Error: " . $sql . "<br>" . self::$conn->error;
-        // }    
-    }
-
-    public function getUser() {
-        return 'Pricken';
-    }
-
-    public function setUser($user) {
-        self::$user = $user;
+        try {
+            $results = self::$conn->query($sql);       
+        } catch (Exception $e) {
+            echo "Error: " . $e . "<br>" . self::$conn->error;
+        }
     }
 }

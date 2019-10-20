@@ -14,6 +14,7 @@ class ScribbleView {
   private static $message;
 
   public function __construct() {
+    self::$message = "";
   }
 
   public function echoHTML($sessionLoggedin) {
@@ -41,15 +42,19 @@ class ScribbleView {
       self::$message = Messages::$invalidCharsInInput;
       self::$title = strip_tags($_POST['title']);
       self::$text = strip_tags($_POST['text']);
+    } else {
+      self::$message = Messages::$messagePublished;
+      self::$title = $_POST['title'];
+      self::$text = $_POST['text'];
     }
   }
 
   public function getTitle() {
-    return self::$text;
+    return self::$title;
   }
   
   public function getText() {
-    return self::$title;
+    return self::$text;
   }
   
   public function setCollection($data) {

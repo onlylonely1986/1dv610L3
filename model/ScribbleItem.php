@@ -3,7 +3,7 @@
 namespace model;
 
 class ScribbleItem {
-
+    // TODO encapsulates and write getters for these, also make them private
     public $title;
     public $text;
     public $user;

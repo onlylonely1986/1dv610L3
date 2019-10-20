@@ -1,20 +1,8 @@
 <?php
 
-// Controller för scribbleactivities
-
-// validering för att kolla om inloggad
-// kollar om användare lägger till en ny scribble
-
-// hämtar i view, skickar till model
-// validering för vissa input i view
-
-// validering av input i model
-// model sparar till db
-// uppdaterar view med nya content
-
 namespace controller;
+
 require_once('model/ScribbleItem.php');
-require_once('model/ScribbleCollection.php');
 
 class ScribbleController {
     private $collection;
@@ -28,27 +16,19 @@ class ScribbleController {
         $this->session = $session;
     }
 
-    public function isThereNewScribble() : bool {
-        if ($this->view->postNewScribble()) {
-            return true;
-        }
-        return false;        
-    }
-
     public function checkForNewScribble($user) : bool {
-        // TODO fixa meddelandefält som säger till om fälten är tomma att fylla i dem
-        // fixa trimning och htmlentities
+        // TODO fix a validation for empty input or to large texts
+        // TODO fix the remove button functionality
         if ($this->view->postNewScribble()) {
-			// try {
-            $title = $this->view->getTitle();
-            $text = $this->view->getText();
-            $item = new \model\ScribbleItem($title, $text, $user);
-                // $this->collection->addItem($scribbleItem);
-            $this->storage->saveScribbles($item);
-            $_POST = [];
-            return true;
-			// } catch (\Exception $e) {
-			// 	$this->view->setNameWasTooShort();
+			
+                $title = $this->view->getTitle();
+                $text = $this->view->getText();
+                $item = new \model\ScribbleItem($title, $text, $user);
+                $this->storage->saveScribbles($item);
+                $_POST = [];
+                return true;
+			//} catch (\Exception $e) {
+            //    echo 'Caught exception: ',  $e->getMessage(), "\n";
 			// }
         } else {
             return false;

@@ -1,18 +1,11 @@
 <?php
 
 class Settings {
-    // TODO change to public if you are on public host
-    // locally
+    // TODO add your own variabel names correct with your database, then change name to settings.php
     public $dbuserName = 'enter your db username here';
     public $dbpassword = 'enter your db password here';
     public $dbserverName = 'enter your db servername here';
     public $dbName = 'enter your db name here';
     public $dbTableName = 'enter the name of your db table here';
     public $dbTableNameUsers = 'enter the name of your other db table here';
-
-    // public
-    // public $dbuserName = 'enter your db username here';
-    // public $dbpassword = 'enter your db password here';
-    // public $dbserverName = 'enter your db servername here';
-    // public $dbName = 'enter your db name here';
 }

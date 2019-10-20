@@ -19,7 +19,6 @@ class LoginView {
 
 	public function tryToLogin() : bool {
 		if (isset($_POST[self::$login])) {
-			echo "loggar in";
 			$this->valueName = $_POST[self::$name];
 			if (empty($_POST[self::$name]) || (empty($_POST[self::$name]) && empty($_POST[self::$password]))) {
 				self::$message .= Messages::$missName;

@@ -2,8 +2,6 @@
 
 namespace model;
 
-require_once('model/ScribbleCollection.php');
-
 class ScribbleStorage {
 
     private static $serverName;
@@ -13,36 +11,38 @@ class ScribbleStorage {
     private static $dbTable;
     private static $conn;
 
-    // Create connection
     public function __construct($settings) {
         self::$serverName = $settings->dbserverName;
         self::$userName = $settings->dbuserName;
         self::$passWord = $settings->dbpassWord;
         self::$dbName = $settings->dbName;
         self::$dbTable = $settings->dbTableName;
-
-        self::$conn = $this->connect();
-        if (self::$conn->connect_error) {
-            die("Connection failed: " . self::$conn->connect_error);
+ 
+        try {
+            self::$conn = $this->connect();
+        // TODO write more specific exeptions for specific problems
+        // TODO do an exeptions class for all exeptions so I don't repeat them or overuse strings
+        } catch (Exception $e){
+            self::$conn->connect_error;
+            die("Connection failed: " . $e . "  " . self::$conn->connect_error);
         }
-        // TODO: wronghandeling
-        // echo "Connected successfully";
     }
 
     private function connect() {
-        self::$conn = new \mysqli(
+        try {
+            self::$conn = new \mysqli(
                 self::$serverName,
                 self::$userName, 
                 self::$passWord, 
                 self::$dbName
-        );
-        if(self::$conn->connect_error) {
-            die("Connection failed: " . self::$conn->connect_error);
+            );
+            return self::$conn; 
+        } catch(Exception $e) {
+            die("Connection failed: " . $e . "  " . self::$conn->connect_error);
         }
-        return self::$conn;
     }
-    // TODO sql injections
-    // use prepered statements
+
+    // TODO avoid sql injections and use prepered statements
     public function saveScribbles($scribbleItem) {
 
         $sql = "INSERT INTO " . self::$dbTable;
@@ -56,22 +56,18 @@ class ScribbleStorage {
         $sql .= "'".$scribbleItem->text."' ";
         $sql .= ");";
 
-        // TODO: wronghandeling
-        // $results = self::$conn->query($sql);
-        if (self::$conn->query($sql) === TRUE) {
-            echo "New record created successfully";
-        } else {
-            echo "Error: " . $sql . "<br>" . self::$conn->error;
+        try {
+            $results = self::$conn->query($sql);        
+        } catch (Exception $e) {
+            echo "Error: " . $e . "<br>" . self::$conn->error;
         }        
     }
 
     public function getSavedScribbles() : array {
-        // TODO validation check connection to db
+        // TODO solve this so I not do an array of different types
         try {
-        $sqli = "SELECT * FROM " . self::$dbTable;
-            if($result = mysqli_query(self::$conn, $sqli)) {
-                echo "worked well";
-            }
+            $sqli = "SELECT * FROM " . self::$dbTable;
+            $result = mysqli_query(self::$conn, $sqli);
 
             $data = array();
             if(mysqli_num_rows($result) > 0) {
@@ -84,7 +80,6 @@ class ScribbleStorage {
         } catch (Exception $e) {
             echo "Problems!! .... $e";
         }
-        
     }
 
     public function closeConnection () {
