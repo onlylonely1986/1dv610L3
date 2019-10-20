@@ -12,6 +12,8 @@ You can also test the application against automatic tests at http://csquiz.lnu.s
 
 If I remove the scribblepart from application the tests show up 77%, but I have not any more time to solve the possible problem with DOM, I think the autotests react on anything in the HTML. An other solution should maybe be to put each component in separate systems and use them together as a whole. 
 
+Link to use cases and test cases, you can also find them in the wiki of this project.
+
 [Use cases](https://github.com/onlylonely1986/1dv610L3/wiki/usecase)
 
 [Test cases](https://github.com/onlylonely1986/1dv610L3/wiki/Test-case)
