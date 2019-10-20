@@ -28,6 +28,13 @@ class ScribbleController {
         $this->session = $session;
     }
 
+    public function isThereNewScribble() : bool {
+        if ($this->view->postNewScribble()) {
+            return true;
+        }
+        return false;        
+    }
+
     public function checkForNewScribble($user) : bool {
         // TODO fixa meddelandefält som säger till om fälten är tomma att fylla i dem
         // fixa trimning och htmlentities

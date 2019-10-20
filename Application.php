@@ -52,6 +52,7 @@ class Application {
     }
 
 	private function changeState() {
+        
         if ($this->registerController->newRegistration()) {
             $this->username = $this->registerController->getUserName();
             $this->loginView->registerNewMessage($this->username);
@@ -69,8 +70,6 @@ class Application {
     }
 
     private function registrationStates() {
-        echo "när körs denna?";
-        var_dump($_SESSION);
         if($this->session->checkRegisterSession()) {
             $this->session->unsetRegisterSession();
         }
@@ -82,6 +81,9 @@ class Application {
         $this->loginView->setLoggedinState($this->username);
         $this->scribbleView->setLoggedinState($this->username);
         $this->layoutView->setLoggedinState($this->session->checkLoggedinSession());
+        if ($this->scribbleController->isThereNewScribble()) {
+            echo "ny scribble ny scribble";
+        } 
         $this->scribbleController->checkForNewScribble($this->username);
     }
 

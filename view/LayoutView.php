@@ -30,13 +30,17 @@ class LayoutView {
             ' . $this->body($v, $rv) . '
             ' . $dv->echoHTML() . '
           </div>
-          <div class="scribble">
-              ' . $sv->echoHTML($this->sessionLoggedin) . '
-          </div>
-          
+              ' . $this->ifLoggedIn($sv) . '
          </body>
       </html>
     ';
+  }
+  
+
+  private function ifLoggedIn($sv) {
+    if ($this->sessionLoggedin){
+        return '<div> ' . $sv->echoHTML($this->sessionLoggedin) . ' </div';
+    }
   }
 
 

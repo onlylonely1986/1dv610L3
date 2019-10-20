@@ -28,6 +28,7 @@ class ScribbleStorage {
         // TODO: wronghandeling
         // echo "Connected successfully";
     }
+
     private function connect() {
         self::$conn = new \mysqli(
                 self::$serverName,
@@ -43,6 +44,7 @@ class ScribbleStorage {
     // TODO sql injections
     // use prepered statements
     public function saveScribbles($scribbleItem) {
+
         $sql = "INSERT INTO " . self::$dbTable;
         $sql .= "(";
         $sql .= "`user`, `title`, `text`";
@@ -68,7 +70,7 @@ class ScribbleStorage {
         try {
         $sqli = "SELECT * FROM " . self::$dbTable;
             if($result = mysqli_query(self::$conn, $sqli)) {
-                // echo "worked well";
+                echo "worked well";
             }
 
             $data = array();

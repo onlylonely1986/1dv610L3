@@ -16,25 +16,30 @@ class ScribbleView {
   public function echoHTML($sessionLoggedin) {
     // TODO om inloggad skicka med en rubrik, om inte skicka en annan
     if (!$sessionLoggedin) {
-      return '<h2>The latest scribbles:</h2>
-                 ' . $this->iterateOverScribbles() . '
-              ';
+      return '';
     } else {
       return '<h2>What s up today ' . self::$userName . ' ?</h2>
                  ' . $this->scribbleFormHTML(). '
                  ' . $this->iterateOverScribbles() . '
               ';
-    }
+    } 
   }
 
   public function postNewScribble() : bool {
-    if(isset($_POST[self::$send])) {
-      echo "yes nu har du post";
-      if (isset($_POST[self::$title]) && isset($_POST[self::$text])) {
-				return true;
-			}
-    }
-		return false;
+    // if(isset($_POST[self::$send])) {
+      if (isset($_POST['title']) && isset($_POST['text'])) {
+        self::$title = $_POST['title'];
+        self::$text = $_POST['text'];
+        return true;
+    } else return false;
+  }
+
+  public function getTitle() {
+    return self::$text;
+  }
+  
+  public function getText() {
+    return self::$title;
   }
   
   public function setCollection($data) {
@@ -52,7 +57,7 @@ class ScribbleView {
       $title = $item['title'];
       $text = $item['text'];
       $ret .= "<p>Post: <b>$user</b>  says: $title || $text</p>";
-      if(self::$isLoggedIn && self::$userName == $item['user']) {
+      if(self::$userName == $item['user']) {
         $ret .= '<input type="submit" value="Remove"/>';
       }
     }
@@ -62,12 +67,22 @@ class ScribbleView {
   // TODO: ska vara synlig om man är inloggad och veta vem som är inloggad
   // TODO name = ej stringar
   private function scribbleFormHTML() {
-    return '<form method="POST">
+      /**return '<form method="POST">
+                  <label for="">Hälsning:</label>
+                  <input type="text" id="" name="" value="" />
+                  <input type="text" id="' . self::$title . '" name="title" value="" />
+                  <label for="">Inlägg:</label>
+                  <input type="text" id="' . self::$text . '" name="text" />
+                  <input type="submit" name="' . self::$send . '"/>
+              </form>';
+              */
+   return '<form href="?" method="POST">
                 <label for="">Say:</label>
                 <input type="text" id="' . self::$title . '" name="title" value="" />
                 <label for="">Say more:</label>
                 <input type="text" id="' . self::$text . '" name="text" />
-                <input type="submit" name="' . self::$send . '"/>
-            </form>';
+                <input type="submit" name="' . self::$send . '" value="send"/>
+            </form>
+          ';
   }
 }
