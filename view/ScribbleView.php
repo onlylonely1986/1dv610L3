@@ -2,6 +2,8 @@
 
 namespace view;
 
+require_once("Messages.php");
+
 class ScribbleView {
   private static $isLoggedIn;
   private static $userName;
@@ -9,6 +11,7 @@ class ScribbleView {
   private static $send;
   private static $title;
   private static $text;
+  private static $message;
 
   public function __construct() {
   }
@@ -28,10 +31,17 @@ class ScribbleView {
   public function postNewScribble() : bool {
     // if(isset($_POST[self::$send])) {
       if (isset($_POST['title']) && isset($_POST['text'])) {
-        self::$title = $_POST['title'];
-        self::$text = $_POST['text'];
-        return true;
+          $this->checkValidInput();
+          return true;
     } else return false;
+  }
+
+  private function checkValidInput() {
+    if(preg_match('/[^A-Za-z0-9]/', $_POST['title']) || preg_match('/[^A-Za-z0-9]/', $_POST['text'])) {
+      self::$message = Messages::$invalidCharsInInput;
+      self::$title = strip_tags($_POST['title']);
+      self::$text = strip_tags($_POST['text']);
+    }
   }
 
   public function getTitle() {
@@ -77,6 +87,7 @@ class ScribbleView {
               </form>';
               */
    return '<form href="?" method="POST">
+                <p>' . self::$message . '</p>
                 <label for="">Say:</label>
                 <input type="text" id="' . self::$title . '" name="title" value="" />
                 <label for="">Say more:</label>
