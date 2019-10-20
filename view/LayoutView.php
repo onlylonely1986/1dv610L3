@@ -3,6 +3,14 @@
 namespace view;
 
 class LayoutView {
+
+  private $sessionLoggedIn;
+  private $sessionRegister;
+
+  public function __construct($sessionLoggedIn, $sessionRegister) {
+    $this->sessionLoggedIn = $sessionLoggedIn;
+    $this->sessionRegister = $sessionRegister;
+  }
   
   public function render(LoginView $v, RegisterView $rv, DateTimeView $dv, ScribbleView $sv) {
 
@@ -19,32 +27,19 @@ class LayoutView {
             ' . $this->body($v, $rv) . '
             ' . $dv->echoHTML() . '
           </div>
+          <div class="scribble">
+              ' . $sv->echoHTML($this->sessionLoggedIn) . '
+          </div>
           
          </body>
       </html>
     ';
-  } /** <div class="container2">
-            <h1>SCRIBBLEBOARD</h1>
-            ' . $sv->echoHTML() . '
-          </div>
-    */
-  /**
-   *             ' . $this->renderIsLoggedIn($isLoggedIn) . '
-            ' . $rv->showLink($showRegView) . '
-            ' . $this->renderRegisterNew($showRegView) . '
-          
-          <div class="container">
-              ' . $lv->response() . '
-              ' . $rv->response($showRegView) . '
-              
-              ' . $dtv->show() . '
-          </div>
-   */
+  }
 
 
   private function title() {
-    if (isset($_SESSION['register']) && isset($_GET['register'])) {
-      if(isset($_SESSION['loggedin'])) {
+    if ($this->sessionRegister && isset($_GET['register'])) {
+      if($this->sessionLoggedIn) {
         return '<h2>Logged in</h2>';
       } else {
         return '<a href="?register">Register a new user</a>
@@ -53,7 +48,7 @@ class LayoutView {
     } else if (isset($_GET['register'])) {
       return '<a href="?">Back to login</a>
                 <h2>Register new member</h2>';
-    } else if(isset($_SESSION['loggedin'])) {
+    } else if($this->sessionLoggedIn) {
       return '<h2>Logged in</h2>';
     }
     else {
@@ -63,12 +58,12 @@ class LayoutView {
   }
 
   private function body(LoginView $v, RegisterView $rv) {
-    if (isset($_SESSION['register']) && isset($_GET['register'])){
-      return $v->echoHTML();
+    if ($this->sessionRegister && isset($_GET['register'])){
+      return $v->echoHTML($this->sessionLoggedIn);
     } else if (isset($_GET['register'])) {
       return $rv->echoHTML();
     } else {
-      return $v->echoHTML();
+      return $v->echoHTML($this->sessionLoggedIn);
     }
   }
 }

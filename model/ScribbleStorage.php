@@ -43,7 +43,7 @@ class ScribbleStorage {
     // TODO sql injections
     // use prepered statements
     public function saveScribbles($scribbleItem) {
-        $sql = "INSERT INTO `scribbleitem`";
+        $sql = "INSERT INTO " . self::$dbTable;
         $sql .= "(";
         $sql .= "`user`, `title`, `text`";
         $sql .= ")";
@@ -55,7 +55,7 @@ class ScribbleStorage {
         $sql .= ");";
 
         // TODO: wronghandeling
-        $results = self::$conn->query($sql);
+        // $results = self::$conn->query($sql);
         if (self::$conn->query($sql) === TRUE) {
             echo "New record created successfully";
         } else {

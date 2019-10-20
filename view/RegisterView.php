@@ -70,10 +70,6 @@ class RegisterView {
         return true;
     }
 
-    public function createNewUser() {
-        $_SESSION['register'] = true;
-    }
-
     public function wasNotPossibleToCreate() {
         self::$message .= 'User exists, pick another username.';
     }
@@ -85,7 +81,7 @@ class RegisterView {
     public function returnNewPassword() {
         return $_POST[self::$password];
     }
-
+    /** 
 	public function showLink($registerNew) {
         if(isset($_SESSION['loggedin'])) {
             return;
@@ -102,6 +98,7 @@ class RegisterView {
             }
         }
     }
+    */
     
     /** 
 	* Generate HTML code on the output buffer for the logout button

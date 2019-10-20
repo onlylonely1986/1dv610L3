@@ -42,9 +42,10 @@ class UserStorage {
 
     public function getUserFromDB(User $newUser) {
         $query = "SELECT * FROM " . self::$dbTable;
+
         if ($result = self::$conn->query($query)) {
             while ($row = $result->fetch_row()) {
-                if ($row[0] == $newUser->getName() && $row[1] == $newUser->getPass()) {
+                if ($row[0] == $newUser->getName() && $row[1] == password_verify($newUser->getPass(), $row[1])) {
                     return true;
                 }
             }
@@ -68,6 +69,9 @@ class UserStorage {
 
     public function saveNewUserToDB(User $user) {
         $this->connect();
+        $inputPwd = $user->getPass();
+        $hashPwd = password_hash($inputPwd, PASSWORD_DEFAULT);
+
         $sql = "INSERT INTO " . self::$dbTable;
         $sql .= "(";
         $sql .= "`username`, `password`";
@@ -75,7 +79,7 @@ class UserStorage {
         $sql .= "VALUES ";
         $sql .= "(";
         $sql .= "'". $user->getName() ."', ";
-        $sql .= "'". $user->getPass() ."'";
+        $sql .= "'". $hashPwd ."'";
         $sql .= ");";
 
         // TODO: wronghandeling

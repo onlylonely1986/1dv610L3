@@ -3,6 +3,7 @@
 require_once("model/UserStorage.php");
 require_once("model/ScribbleStorage.php");
 require_once("model/ScribbleCollection.php");
+require_once("model/SessionModel.php");
 require_once("controller/LoginController.php");
 require_once("controller/RegisterController.php");
 require_once("controller/ScribbleController.php");
@@ -15,6 +16,7 @@ require_once("view/ScribbleView.php");
 class Application {
     private $userStorage;
     private $scribbleStorage;
+    private $session;
     private $mainController;
     private $loginController;
     private $registerController;
@@ -28,13 +30,21 @@ class Application {
     public function __construct($settings) {
         $this->userStorage = new \model\UserStorage($settings);
         $this->scribbleStorage = new \model\ScribbleStorage($settings);
-        $this->layoutView  = new \view\LayoutView();
+        $this->session = new \model\SessionModel();
+        $this->layoutView  = new \view\LayoutView($this->session->checkLoggedinSession(), 
+                                                    $this->session->checkRegisterSession());
         $this->scribbleView  = new \view\ScribbleView();
         $this->loginView  = new \view\LoginView();
         $this->registerView  = new \view\RegisterView();
-        $this->loginController = new \controller\LoginController($this->loginView, $this->userStorage);
-        $this->registerController = new \controller\RegisterController($this->registerView, $this->userStorage);
-        $this->scribbleController = new \controller\ScribbleController($this->scribbleView, $this->scribbleStorage);
+        $this->loginController = new \controller\LoginController($this->loginView, 
+                                                                    $this->userStorage, 
+                                                                    $this->session);
+        $this->registerController = new \controller\RegisterController($this->registerView, 
+                                                                        $this->userStorage, 
+                                                                        $this->session);
+        $this->scribbleController = new \controller\ScribbleController($this->scribbleView, 
+                                                                        $this->scribbleStorage, 
+                                                                        $this->session);
     }
 
 	public function run() {
@@ -46,23 +56,21 @@ class Application {
         if ($this->registerController->newRegistration()) {
             $username = $this->registerController->getUserName();
             $this->loginView->setMessage($username);
-            // $this->user = $this->userStorage->getUser();
         }
 
         if($this->loginController->checkForLoggedIn()) {
-            echo "nån loggar in";
+            // called to undefined getName()
+            if ($this->session->checkLoggedInSession()) {
+                $username = $this->session->getUserName();
+                $this->scribbleView->setLoggedInState($username);
+                $this->scribbleController->checkForNewScribble($username);
+            }
         }
-        
-        // TODO obs hårdkodat obs visa bara scribbles om man är inloggad
-        // $this->scribbleView->setLoggedInState(self::$userIsLoggedIn, $this->user);
-        // if ($this->user == 'Pricken') {
-        //    $this->scribbleController->checkForNewScribble($this->user);
-        // }
     }
 
 	private function generateOutput() {
-        // $data = $this->scribbleStorage->getSavedScribbles();
-        // $this->scribbleView->setCollection($data);        
+        $data = $this->scribbleStorage->getSavedScribbles();
+        $this->scribbleView->setCollection($data);        
         $dateView  = new \view\DateTimeView();
 
         // TODO om man är inloggad kör en speciell view för scribbles

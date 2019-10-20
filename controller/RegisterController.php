@@ -7,15 +7,16 @@ require_once("model/User.php");
 class RegisterController {
     private $view;
     private $storage;
+    private $session;
     private $newUser;
 
-    public function __construct(\view\RegisterView $view, \model\UserStorage $storage) {
+    public function __construct(\view\RegisterView $view, \model\UserStorage $storage, \model\SessionModel $session) {
         $this->view = $view;
         $this->storage = $storage;
+        $this->session = $session;
     }
 
     public function newRegistration() : bool {
-        // return $this->view->wantsToRegister();
         if ($this->view->wantsToRegister()) {
             if($this->view->hitButton()) {
                 if($this->view->isAllFieldsFilled()) {
@@ -24,9 +25,8 @@ class RegisterController {
                         if($this->storage->checkForPossibleName($user)) {
                             $password = $this->view->returnNewPassword();
                             $this->setNewUser($user, $password);
-                            // TODO hasch password
                             $this->storage->saveNewUserToDB($this->newUser);
-                            $this->view->createNewUser();
+                            $this->session->setRegisterSession();
                             return true;
                         } else {
                             $this->view->wasNotPossibleToCreate();

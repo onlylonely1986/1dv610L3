@@ -58,10 +58,8 @@ class LoginView {
 		}
 	}
 
-	public function loginWithCookies() : bool {
-		if(isset($_COOKIE[self::$cookieName]) && !(isset($_SESSION['welcome']))) {
-			$_SESSION['loggedin'] = true;
-			$_SESSION['welcome'] = true;
+	public function loginWithCookies($isSessionWelcome) : bool {
+		if(isset($_COOKIE[self::$cookieName]) && !$isSessionWelcome) {
 			self::$message = "Welcome back with cookie";
 			return true;
 		}
@@ -69,31 +67,25 @@ class LoginView {
 	}
 
 	public function loggedIn() {
-		$_SESSION['loggedin'] = true;
-		$_SESSION['welcome'] = true;
 		self::$message = 'Welcome';
+		$this->valueName = $_POST[self::$name];
 		if(isset($_POST[self::$login]) && isset($_POST[self::$keep])) {
 			$this->saveCookie();
 		}
 	}
 
 	private function saveCookie() {
+		self::$cookieName = $this->valueName;
 		setcookie(self::$cookieName, self::$cookiePassword, time()+3600);
 	}
 
-	public function loggedInReload() : bool {
-		if(isset($_SESSION['loggedin']) && isset($_SESSION['welcome'])) {
-			self::$message = '';
-			unset($_SESSION['welcome']);
-			return true;
-		}
-		return false;
+	public function loggedInReload() {
+		self::$message = '';
 	}
 
-	public function loggedOut() : bool {
-		if (isset($_POST[self::$logout]) && isset($_SESSION['loggedin'])) {
+	public function loggedOut($sessionLoggedIn) : bool {
+		if (isset($_POST[self::$logout]) && $sessionLoggedIn) {
 			self::$message = 'Bye bye!';
-			unset($_SESSION['loggedin']);
 			return true;
 		}
 		return false;
@@ -110,8 +102,8 @@ class LoginView {
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
-	public function echoHTML() {
-		if (isset($_SESSION['loggedin'])) {
+	public function echoHTML($sessionLoggedIn) {
+		if ($sessionLoggedIn) {
 			$response = $this->generateLogoutButtonHTML();
 		} else {
 			$response = $this->generateLoginFormHTML();
