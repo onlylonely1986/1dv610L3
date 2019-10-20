@@ -41,7 +41,7 @@ class ScribbleView {
     self::$collection = $data;
   }
 
-  public function setLoggedInState($user) {
+  public function setLoggedinState($user) {
     self::$userName = $user;
   }
 

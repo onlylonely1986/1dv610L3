@@ -4,13 +4,16 @@ namespace view;
 
 class LayoutView {
 
-  private $sessionLoggedIn;
+  private $sessionLoggedin;
   private $sessionRegister;
 
-  public function __construct($sessionLoggedIn, $sessionRegister) {
-    $this->sessionLoggedIn = $sessionLoggedIn;
-    $this->sessionRegister = $sessionRegister;
+  public function setLoggedinState($sessionLoggedin) {
+		$this->sessionLoggedin = $sessionLoggedin;
   }
+  
+  public function setRegisterState($sessionRegister) {
+		$this->sessionRegister = $sessionRegister;
+	}
   
   public function render(LoginView $v, RegisterView $rv, DateTimeView $dv, ScribbleView $sv) {
 
@@ -28,7 +31,7 @@ class LayoutView {
             ' . $dv->echoHTML() . '
           </div>
           <div class="scribble">
-              ' . $sv->echoHTML($this->sessionLoggedIn) . '
+              ' . $sv->echoHTML($this->sessionLoggedin) . '
           </div>
           
          </body>
@@ -39,7 +42,7 @@ class LayoutView {
 
   private function title() {
     if ($this->sessionRegister && isset($_GET['register'])) {
-      if($this->sessionLoggedIn) {
+      if($this->sessionLoggedin) {
         return '<h2>Logged in</h2>';
       } else {
         return '<a href="?register">Register a new user</a>
@@ -48,7 +51,7 @@ class LayoutView {
     } else if (isset($_GET['register'])) {
       return '<a href="?">Back to login</a>
                 <h2>Register new member</h2>';
-    } else if($this->sessionLoggedIn) {
+    } else if($this->sessionLoggedin) {
       return '<h2>Logged in</h2>';
     }
     else {
@@ -59,11 +62,11 @@ class LayoutView {
 
   private function body(LoginView $v, RegisterView $rv) {
     if ($this->sessionRegister && isset($_GET['register'])){
-      return $v->echoHTML($this->sessionLoggedIn);
+      return $v->echoHTML($this->sessionLoggedin);
     } else if (isset($_GET['register'])) {
       return $rv->echoHTML();
     } else {
-      return $v->echoHTML($this->sessionLoggedIn);
+      return $v->echoHTML($this->sessionLoggedin);
     }
   }
 }

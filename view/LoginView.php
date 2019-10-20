@@ -32,7 +32,7 @@ class LoginView {
 		return false;
 	}
 
-	public function setMessage(string $user) {
+	public function registerNewMessage(string $user) {
 		self::$message = "Registered new user.";
 		$this->valueName = $user;
 	}
@@ -60,6 +60,7 @@ class LoginView {
 
 	public function loginWithCookies($isSessionWelcome) : bool {
 		if(isset($_COOKIE[self::$cookieName]) && !$isSessionWelcome) {
+			echo "när har vi cookie då?";
 			self::$message = "Welcome back with cookie";
 			return true;
 		}
@@ -74,9 +75,12 @@ class LoginView {
 		}
 	}
 
+	public function setLoggedinState($user) {
+		self::$name = $user;
+	  }
+
 	private function saveCookie() {
-		self::$cookieName = $this->valueName;
-		setcookie(self::$cookieName, self::$cookiePassword, time()+3600);
+		setcookie($this->valueName, self::$cookiePassword, time()+3600);
 	}
 
 	public function loggedInReload() {
@@ -102,8 +106,8 @@ class LoginView {
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
-	public function echoHTML($sessionLoggedIn) {
-		if ($sessionLoggedIn) {
+	public function echoHTML($sessionLoggedin) {
+		if ($sessionLoggedin) {
 			$response = $this->generateLogoutButtonHTML();
 		} else {
 			$response = $this->generateLoginFormHTML();
@@ -117,7 +121,6 @@ class LoginView {
 	* @return  void, BUT writes to standard output!
 	*/
 	private function generateLoginFormHTML() {
-        $message = "";
 		return '
 			<form method="POST" > 
 				<fieldset>

@@ -18,11 +18,9 @@ class LoginController {
 
     public function checkForLoggedIn () : bool {
         if($this->view->loggedOut($this->session->checkLoggedinSession())) {
-            $this->session->unsetUserinSession();
+            $this->session->unsetUserSession();
             return false;
-            // $isSessionWelcome = $this->session->checkWelcomeSession();
         } else if($this->view->loginWithCookies($this->session->checkWelcomeSession())) {
-            $session->setUserSession();
             $this->user = $this->session->getUserName();
             return true;
         }else if ($this->session->checkReloadSession()) {
@@ -38,13 +36,13 @@ class LoginController {
 
     private function tryToLogin () : bool {
         if ($this->view->tryToLogin()) {
-            // TODO bättre namn!
             if ($this->view->bothFieldsFilled()) {
                 $user = $this->view->getUserName();
                 $password = $this->view->getPassword();
                 $this->user = new \model\User($user, $password);
                 if ($this->storage->getUserFromDB($this->user)) {
-                    $this->session->setWelcomeSession($this->user);
+                    $this->session->setWelcomeSession($user);
+                    $this->session->setUserSession($user);
                     $this->view->loggedIn();
                     return true;
                 } else {

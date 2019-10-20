@@ -21,7 +21,7 @@ class Application {
     private $loginController;
     private $registerController;
     private $scribbleController;
-	private $user; 
+	private $username; 
     private $layoutView;
     private $loginView;
     private $scribbleView;
@@ -31,12 +31,11 @@ class Application {
         $this->userStorage = new \model\UserStorage($settings);
         $this->scribbleStorage = new \model\ScribbleStorage($settings);
         $this->session = new \model\SessionModel();
-        $this->layoutView  = new \view\LayoutView($this->session->checkLoggedinSession(), 
-                                                    $this->session->checkRegisterSession());
+        $this->layoutView  = new \view\LayoutView();
         $this->scribbleView  = new \view\ScribbleView();
         $this->loginView  = new \view\LoginView();
         $this->registerView  = new \view\RegisterView();
-        $this->loginController = new \controller\LoginController($this->loginView, 
+        $this->loginController = new \controller\LoginController($this->loginView,
                                                                     $this->userStorage, 
                                                                     $this->session);
         $this->registerController = new \controller\RegisterController($this->registerView, 
@@ -54,17 +53,21 @@ class Application {
 
 	private function changeState() {
         if ($this->registerController->newRegistration()) {
-            $username = $this->registerController->getUserName();
-            $this->loginView->setMessage($username);
-        }
-
-        if($this->loginController->checkForLoggedIn()) {
-            // called to undefined getName()
-            if ($this->session->checkLoggedInSession()) {
-                $username = $this->session->getUserName();
-                $this->scribbleView->setLoggedInState($username);
-                $this->scribbleController->checkForNewScribble($username);
+            $this->username = $this->registerController->getUserName();
+            $this->loginView->registerNewMessage($this->username);
+            $this->layoutView->setRegisterState($this->session->checkRegisterSession());
+        } else if($this->loginController->checkForLoggedIn()) {
+            if($this->session->checkRegisterSession()) {
+                $this->session->unsetRegisterSession();
             }
+            $this->username = $this->session->getUserName();
+            $this->loginView->setLoggedinState($this->username);
+            $this->scribbleView->setLoggedinState($this->username);
+            $this->layoutView->setLoggedinState($this->session->checkLoggedinSession());
+            $this->scribbleController->checkForNewScribble($this->username);
+        } else if($this->session->checkLoggedinSession()) {
+            $this->layoutView->setLoggedinState($this->session->checkLoggedinSession());
+            $this->username = $this->session->getUserName();
         }
     }
 
