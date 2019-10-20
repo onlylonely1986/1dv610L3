@@ -18,7 +18,6 @@ class ScribbleView {
   }
 
   public function echoHTML($sessionLoggedin) {
-    // TODO om inloggad skicka med en rubrik, om inte skicka en annan
     if (!$sessionLoggedin) {
       return '';
     } else {
@@ -30,15 +29,17 @@ class ScribbleView {
   }
 
   public function postNewScribble() : bool {
+    // TODO I had a lot of problems with reaching this post, it is 
+    //      probably a formating problem that I can't find
     // if(isset($_POST[self::$send])) {
-      if (isset($_POST['title']) && isset($_POST['text'])) {
+    if (isset($_POST['title']) && isset($_POST['text'])) {
           $this->checkValidInput();
           return true;
     } else return false;
   }
 
   private function checkValidInput() {
-    if(preg_match('/[^A-Za-z0-9]/', $_POST['title']) || preg_match('/[^A-Za-z0-9]/', $_POST['text'])) {
+    if(preg_match('/[^\w -!?@#$%^&*()]/', $_POST['title']) || preg_match('/[^\w -!?@#$%^&*()]/', $_POST['text'])) {
       self::$message = Messages::$invalidCharsInInput;
       self::$title = strip_tags($_POST['title']);
       self::$text = strip_tags($_POST['text']);
@@ -79,18 +80,7 @@ class ScribbleView {
     return $ret;
   }
 
-  // TODO: ska vara synlig om man är inloggad och veta vem som är inloggad
-  // TODO name = ej stringar
   private function scribbleFormHTML() {
-      /**return '<form method="POST">
-                  <label for="">Hälsning:</label>
-                  <input type="text" id="" name="" value="" />
-                  <input type="text" id="' . self::$title . '" name="title" value="" />
-                  <label for="">Inlägg:</label>
-                  <input type="text" id="' . self::$text . '" name="text" />
-                  <input type="submit" name="' . self::$send . '"/>
-              </form>';
-              */
    return '<form href="?" method="POST">
                 <p>' . self::$message . '</p>
                 <label for="">Say:</label>

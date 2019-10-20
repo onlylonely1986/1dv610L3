@@ -64,7 +64,7 @@ class RegisterView {
             return false;
         }
 
-        if(preg_match('/[^A-Za-z0-9]/', $_POST[self::$name])) {
+        if(preg_match('/[^\w -!?@#$%^&*()]/', $_POST[self::$name])) {
             self::$message .= Messages::$invalidChars;
             self::$testName = strip_tags ($_POST[self::$name]);
             return false;

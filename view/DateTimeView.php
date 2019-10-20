@@ -4,25 +4,26 @@ namespace view;
 
 class DateTimeView {
 
-	private $day;
-	private $date;
-	private $monthName;
-	private $year;
-	private $time;
-	private $timeStr = "";
+	private static $day;
+	private static $date;
+	private static $monthName;
+	private static $year;
+	private static $time;
+	private static $timeStr;
 
 	public function __construct() {
 		date_default_timezone_set("Europe/Stockholm");
-		$this->day = Date("l");
-		$this->date = Date("dS");
-		$this->monthName = Date("F");
-		$this->year = Date("20y");
-		$this->time = Date("H:i:s");
+		self::$day = Date("l");
+		self::$date = Date("dS");
+		self::$monthName = Date("F");
+		self::$year = Date("20y");
+		self::$time = Date("H:i:s");
 	}
 
 	public function echoHTML() {
-		$this->timeStr = $this->day . ", the " . $this->date . " of " . $this->monthName . " " 
-			. $this->year . ", The time is " . $this->time;
-		return '<p>' . $this->timeStr . '</p>';
+		self::$timeStr = self::$day . ", the "
+							 . self::$date . " of " . self::$monthName . " " 
+								. self::$year . ", The time is " . self::$time;
+		return '<p>' . self::$timeStr . '</p>';
 	}
 }
