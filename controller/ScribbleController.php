@@ -5,7 +5,6 @@ namespace controller;
 require_once('model/ScribbleItem.php');
 
 class ScribbleController {
-    private $collection;
     private $view;
     private $storage;
     private $session;
@@ -20,16 +19,17 @@ class ScribbleController {
         // TODO fix a validation for empty input or to large texts
         // TODO fix the remove button functionality
         if ($this->view->postNewScribble()) {
-			
+			try {
                 $title = $this->view->getTitle();
                 $text = $this->view->getText();
                 $item = new \model\ScribbleItem($title, $text, $user);
                 $this->storage->saveScribbles($item);
                 $_POST = [];
                 return true;
-			//} catch (\Exception $e) {
-            //    echo 'Caught exception: ',  $e->getMessage(), "\n";
-			// }
+
+			} catch (\Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+			}
         } else {
             return false;
         }

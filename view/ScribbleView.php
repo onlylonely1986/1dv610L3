@@ -8,9 +8,9 @@ class ScribbleView {
   private static $isLoggedIn;
   private static $userName;
   private static $collection;
-  private static $send;
-  private static $title;
-  private static $text;
+  private static $send = 'ScribbleView::send';
+  private static $title = 'ScribbleView::title';
+  private static $text = 'ScribbleView::text';
   private static $message;
 
   public function __construct() {
@@ -29,24 +29,23 @@ class ScribbleView {
   }
 
   public function postNewScribble() : bool {
-    // TODO I had a lot of problems with reaching this post, it is 
-    //      probably a formating problem that I can't find
-    // if(isset($_POST[self::$send])) {
-    if (isset($_POST['title']) && isset($_POST['text'])) {
-          $this->checkValidInput();
-          return true;
+    if(isset($_POST[self::$send])) {
+      if (isset($_POST[self::$title]) && isset($_POST[self::$text])) {
+            $this->checkValidInput();
+            return true;
+      } return false;
     } else return false;
   }
 
   private function checkValidInput() {
-    if(preg_match('/[^\w -!?@#$%^&*()]/', $_POST['title']) || preg_match('/[^\w -!?@#$%^&*()]/', $_POST['text'])) {
+    if(preg_match('/[^\w -!?@#$%^&*()]/', $_POST[self::$title]) || preg_match('/[^\w -!?@#$%^&*()]/', $_POST[self::$text])) {
       self::$message = Messages::$invalidCharsInInput;
-      self::$title = strip_tags($_POST['title']);
-      self::$text = strip_tags($_POST['text']);
+      self::$title = strip_tags($_POST[self::$title]);
+      self::$text = strip_tags($_POST[self::$text]);
     } else {
       self::$message = Messages::$messagePublished;
-      self::$title = $_POST['title'];
-      self::$text = $_POST['text'];
+      self::$title = $_POST[self::$title];
+      self::$text = $_POST[self::$text];
     }
   }
 
@@ -84,10 +83,10 @@ class ScribbleView {
    return '<form href="?" method="POST">
                 <p>' . self::$message . '</p>
                 <label for="">Say:</label>
-                <input type="text" id="' . self::$title . '" name="title" value="" />
+                <input type="text" id="' . self::$title . '" name="' . self::$title . '" value="" />
                 <label for="">Say more:</label>
-                <input type="text" id="' . self::$text . '" name="text" />
-                <input type="submit" name="' . self::$send . '" value="send"/>
+                <input type="text" id="' . self::$text . '" name="' . self::$text . '" />
+                <input type="submit" id="' . self::$send . '" name="' . self::$send . '" value="send"/>
             </form>
           ';
   }

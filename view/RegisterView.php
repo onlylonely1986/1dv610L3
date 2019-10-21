@@ -12,6 +12,8 @@ class RegisterView {
     private static $message = '';
     private static $testName = '';
     private static $register = 'RegisterView::Register';
+    private static $minCharPass = 7;
+    private static $minCharName = 4;
 
     public function wantsToRegister() : bool {
         if (isset($_GET['register'])) {
@@ -51,11 +53,11 @@ class RegisterView {
 
     public function validateInputs() : bool {
         self::$testName = $_POST[self::$name];
-        if(strlen($_POST[self::$name]) < 4) {
+        if(strlen($_POST[self::$name]) < self::$minCharName) {
             self::$message = Messages::$toShortName;
             return false;
         }
-        if(strlen($_POST[self::$password]) < 7 || strlen($_POST[self::$passwordRepeat]) < 7 ) {
+        if(strlen($_POST[self::$password]) < self::$minCharPass || strlen($_POST[self::$passwordRepeat]) < self::$minCharPass ) {
             self::$message .= Messages::$toShortPass;
             return false;
         }
