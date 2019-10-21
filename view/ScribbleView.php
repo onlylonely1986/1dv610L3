@@ -11,6 +11,7 @@ class ScribbleView {
   private static $send = 'ScribbleView::send';
   private static $title = 'ScribbleView::title';
   private static $text = 'ScribbleView::text';
+  private static $removeBtn = 'ScribbleView::remove';
   private static $message;
 
   public function __construct() {
@@ -56,6 +57,13 @@ class ScribbleView {
   public function getText() {
     return self::$text;
   }
+
+  public function removeScribble() : bool {
+    // TODO implement this 
+    if (isset($_POST[self::$removeBtn])) {
+      return true;
+    } else return false;
+  }
   
   public function setCollection($data) {
     self::$collection = $data;
@@ -73,7 +81,7 @@ class ScribbleView {
       $text = $item['text'];
       $ret .= "<p>Post: <b>$user</b>  says: $title || $text</p>";
       if(self::$userName == $item['user']) {
-        $ret .= '<input type="submit" value="Remove"/>';
+        $ret .= '<input type="submit" name="' . self::$removeBtn . '" value="Remove"/>';
       }
     }
     return $ret;

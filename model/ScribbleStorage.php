@@ -82,6 +82,10 @@ class ScribbleStorage {
         }
     }
 
+    public function removeScribble() {
+        // TODO implement this
+    }
+
     public function closeConnection () {
         self::$conn->close();
     }
