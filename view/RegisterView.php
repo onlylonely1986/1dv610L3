@@ -9,11 +9,11 @@ class RegisterView {
     private static $password = 'RegisterView::Password';
     private static $passwordRepeat = 'RegisterView::PasswordRepeat';
     private static $messageId = 'RegisterView::Message';
-    private static $message = '';
-    private static $testName = '';
     private static $register = 'RegisterView::Register';
     private static $minCharPass = 7;
     private static $minCharName = 4;
+    private $message = '';
+    private $testName = '';
 
     public function wantsToRegister() : bool {
         if (isset($_GET['register'])) {
@@ -32,18 +32,18 @@ class RegisterView {
     public function isAllFieldsFilled() : bool {
         if (isset($_POST[self::$register])) {
             if (empty($_POST[self::$passwordRepeat])) {
-                self::$message .= Messages::$toShortPass;
+                $this->message .= Messages::$toShortPass;
             }
             if ((empty($_POST[self::$name]) && empty($_POST[self::$password])) || empty($_POST[self::$name])) {
-                self::$message .= Messages::$toShortName;
+                $this->message .= Messages::$toShortName;
                 return false;
             }
             if (empty($_POST[self::$password]) || empty($_POST[self::$passwordRepeat])) {
-                self::$message .= Messages::$toShortPass;
+                $this->message .= Messages::$toShortPass;
                 return false;
             }
             if ($_POST[self::$name] == self::$testName && empty($_POST[self::$password])) {
-                self::$message = Messages::$toShortPass;
+                $this->message = Messages::$toShortPass;
                 return false;
             } 
             return true;
@@ -52,30 +52,30 @@ class RegisterView {
     }
 
     public function validateInputs() : bool {
-        self::$testName = $_POST[self::$name];
+        $this->testName = $_POST[self::$name];
         if(strlen($_POST[self::$name]) < self::$minCharName) {
-            self::$message = Messages::$toShortName;
+            $this->message = Messages::$toShortName;
             return false;
         }
         if(strlen($_POST[self::$password]) < self::$minCharPass || strlen($_POST[self::$passwordRepeat]) < self::$minCharPass ) {
-            self::$message .= Messages::$toShortPass;
+            $this->message .= Messages::$toShortPass;
             return false;
         }
         if($_POST[self::$password] != $_POST[self::$passwordRepeat]) {
-            self::$message .= Messages::$passNotMatch;
+            $this->message .= Messages::$passNotMatch;
             return false;
         }
 
         if(preg_match('/[^\w -!?@#$%^&*()]/', $_POST[self::$name])) {
-            self::$message .= Messages::$invalidChars;
-            self::$testName = strip_tags ($_POST[self::$name]);
+            $this->message .= Messages::$invalidChars;
+            $this->testName = strip_tags ($_POST[self::$name]);
             return false;
         }
         return true;
     }
 
     public function wasNotPossibleToCreate() {
-        self::$message .= Messages::$userExists;
+        $this->message .= Messages::$userExists;
     }
 
     public function returnNewUserName() {
@@ -96,10 +96,10 @@ class RegisterView {
 			<form action="?register" enctype="multipart/form-data" method="POST" > 
 				<fieldset>
 					<legend>Register a new user - Write username and password</legend>
-					<p id="' . self::$messageId. '">' . self::$message . '</p>
+					<p id="' . self::$messageId. '">' . $this->message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-                    <input type="text" id="' . self::$name . '" name="' . self::$name . '" size="20" value="' . self::$testName . '" />
+                    <input type="text" id="' . self::$name . '" name="' . self::$name . '" size="20" value="' . $this->testName . '" />
                     <br/>
 
                     <label for="' . self::$password . '">Password :</label>

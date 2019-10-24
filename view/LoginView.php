@@ -13,7 +13,7 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
-	private static $message = '';
+	private $message = '';
 	private $valueName = '';
 	private $valuePwd = '';
 
@@ -21,10 +21,10 @@ class LoginView {
 		if (isset($_POST[self::$login])) {
 			$this->valueName = $_POST[self::$name];
 			if (empty($_POST[self::$name]) || (empty($_POST[self::$name]) && empty($_POST[self::$password]))) {
-				self::$message .= Messages::$missName;
+				$this->message .= Messages::$missName;
 				return false;
 			} else if (isset($_POST[self::$name]) && empty($_POST[self::$password])) {
-				self::$message .= Messages::$missPass;
+				$this->message .= Messages::$missPass;
 				return false;
 			}
 			return true;
@@ -33,7 +33,7 @@ class LoginView {
 	}
 
 	public function registerNewMessage(string $user) {
-		self::$message = Messages::$registerNew;
+		$this->message = Messages::$registerNew;
 		$this->valueName = $user;
 	}
 
@@ -60,14 +60,14 @@ class LoginView {
 
 	public function loginWithCookies($isSessionWelcome) : bool {
 		if(isset($_COOKIE[self::$cookieName]) && !$isSessionWelcome) {
-			self::$message = Messages::$welcomeCookie;
+			$this->message = Messages::$welcomeCookie;
 			return true;
 		}
 		return false;
 	}
 
 	public function loggedIn() {
-		self::$message =  Messages::$welcome;
+		$this->message =  Messages::$welcome;
 		$this->valueName = $_POST[self::$name];
 		if(isset($_POST[self::$login]) && isset($_POST[self::$keep])) {
 			$this->saveCookie();
@@ -83,20 +83,20 @@ class LoginView {
 	}
 
 	public function loggedInReload() {
-		self::$message = '';
+		$this->message = '';
 	}
 
 	public function loggedOut($sessionLoggedIn) : bool {
 		if (isset($_POST[self::$logout]) && $sessionLoggedIn) {
 			setcookie(self::$cookieName, "", time()-3600);
-			self::$message = Messages::$bye;
+			$this->message = Messages::$bye;
 			return true;
 		}
 		return false;
 	}
 
 	public function wrongNameOrPass() {
-		self::$message = Messages::$wrongNameOrPass;
+		$this->message = Messages::$wrongNameOrPass;
 	}
 
     /**
@@ -125,7 +125,7 @@ class LoginView {
 			<form method="POST" > 
 				<fieldset>
 					<legend>Login - enter username and password</legend>
-					<p id="' . self::$messageId . '">' . self::$message . '</p>
+					<p id="' . self::$messageId . '">' . $this->message . '</p>
 					
 					<label for="' . self::$name . '">Username:</label>
 					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->valueName . '" />
@@ -149,7 +149,7 @@ class LoginView {
 	private function generateLogoutButtonHTML() {
 		return '
 			<form  method="post" >
-				<p id="' . self::$messageId . '">' . self::$message .'</p>
+				<p id="' . self::$messageId . '">' . $this->message .'</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
 			</form>
 		';
