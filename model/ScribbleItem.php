@@ -4,13 +4,13 @@ namespace model;
 
 class ScribbleItem {
     // TODO encapsulates and write getters for these, also make them private
+    public $user;
     public $title;
     public $text;
-    public $user;
 
-    public function __construct(string $title, string $text, string $user) {
+    public function __construct(string $user, string $title, string $text) {
+        $this->user = $user;
         $this->title = $title;
         $this->text = $text;
-        $this->user = $user;
     }
 }

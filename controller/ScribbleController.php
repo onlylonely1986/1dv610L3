@@ -22,7 +22,7 @@ class ScribbleController {
 			try {
                 $title = $this->view->getTitle();
                 $text = $this->view->getText();
-                $item = new \model\ScribbleItem($title, $text, $user);
+                $item = new \model\ScribbleItem($user, $title, $text);
                 $this->storage->saveScribbles($item);
                 $_POST = [];
                 return true;

@@ -3,6 +3,7 @@
 namespace view;
 
 require_once("Messages.php");
+require_once("model/ScribbleItem.php");
 
 class ScribbleView {
   private static $send = 'ScribbleView::send';
@@ -75,11 +76,11 @@ class ScribbleView {
   private function iterateOverScribbles() {
     $ret = "";
     foreach ($this->collection as $item) {
-      $user = $item['user'];
-      $title = $item['title'];
-      $text = $item['text'];
+      $user = $item->user;
+      $title = $item->title;
+      $text = $item->text;
       $ret .= "<p>Post: <b>$user</b>  says: $title || $text</p>";
-      if($this->userName == $item['user']) {
+      if($this->userName == $item->user) {
         $ret .= '<input type="submit" name="' . self::$removeBtn . '" value="Remove"/>';
       }
     }

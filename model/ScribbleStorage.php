@@ -10,6 +10,7 @@ class ScribbleStorage {
     private static $dbName;
     private static $dbTable;
     private static $conn;
+    private $collectionOfItems;
 
     public function __construct($settings) {
         self::$serverName = $settings->dbserverName;
@@ -20,7 +21,7 @@ class ScribbleStorage {
  
         try {
             self::$conn = $this->connect();
-        // TODO write more specific exeptions for specific problems
+        // TODO write more specific exceptions for specific problems
         // TODO do an exeptions class for all exeptions so I don't repeat them or overuse strings
         } catch (Exception $e){
             self::$conn->connect_error;
@@ -64,19 +65,20 @@ class ScribbleStorage {
     }
 
     public function getSavedScribbles() : array {
-        // TODO solve this so I not do an array of different types
+
         try {
             $sqli = "SELECT * FROM " . self::$dbTable;
             $result = mysqli_query(self::$conn, $sqli);
 
             $data = array();
             if(mysqli_num_rows($result) > 0) {
-                while($row = mysqli_fetch_assoc($result)) {
-                    $data[] = $row;
+                while($obj = $result->fetch_object()) {
+                    $this->collectionOfItems[] = new ScribbleItem($obj->user, $obj->title, $obj->text);
                 }
             }
+
             mysqli_close(self::$conn);
-            return $data;
+            return $this->collectionOfItems;
         } catch (Exception $e) {
             echo "Problems!! .... $e";
         }
