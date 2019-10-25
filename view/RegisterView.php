@@ -42,7 +42,7 @@ class RegisterView {
                 $this->message .= Messages::$toShortPass;
                 return false;
             }
-            if ($_POST[self::$name] == self::$testName && empty($_POST[self::$password])) {
+            if ($_POST[self::$name] == $this->testName && empty($_POST[self::$password])) {
                 $this->message = Messages::$toShortPass;
                 return false;
             } 

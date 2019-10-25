@@ -27,8 +27,9 @@ class ScribbleController {
                 $_POST = [];
                 return true;
 
-			} catch (\Exception $e) {
-                echo 'Caught exception: ',  $e->getMessage(), "\n";
+			} catch (Exception $e) {
+                throw new Exception();
+                // echo 'Caught exception: ',  $e->getMessage(), "\n";
 			}
         } else {
             return false;

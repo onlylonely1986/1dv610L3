@@ -1,6 +1,7 @@
 <?php
 
 namespace model;
+require_once("ConnectionException.php");
 
 class ScribbleStorage {
 
@@ -19,33 +20,25 @@ class ScribbleStorage {
         self::$dbName = $settings->dbName;
         self::$dbTable = $settings->dbTableName;
  
-        try {
-            self::$conn = $this->connect();
-        // TODO write more specific exceptions for specific problems
-        // TODO do an exeptions class for all exeptions so I don't repeat them or overuse strings
-        } catch (Exception $e){
-            self::$conn->connect_error;
-            die("Connection failed: " . $e . "  " . self::$conn->connect_error);
-        }
+        $this->connect();  
     }
 
     private function connect() {
-        try {
-            self::$conn = new \mysqli(
-                self::$serverName,
-                self::$userName, 
-                self::$passWord, 
-                self::$dbName
-            );
-            return self::$conn; 
-        } catch(Exception $e) {
-            die("Connection failed: " . $e . "  " . self::$conn->connect_error);
+        self::$conn = new \mysqli(self::$serverName, 
+                                    self::$userName, 
+                                    self::$passWord, 
+                                    self::$dbName
+                                );
+
+        if (self::$conn->connect_errno) {
+            throw new ConnectionException();
+            exit();
         }
     }
 
     // TODO avoid sql injections and use prepered statements
     public function saveScribbles($scribbleItem) {
-
+        
         $sql = "INSERT INTO " . self::$dbTable;
         $sql .= "(";
         $sql .= "`user`, `title`, `text`";
@@ -58,15 +51,19 @@ class ScribbleStorage {
         $sql .= ");";
 
         try {
+            $this->connect();
             $results = self::$conn->query($sql);        
         } catch (Exception $e) {
             echo "Error: " . $e . "<br>" . self::$conn->error;
-        }        
+        } finally {
+            $this->closeConnection();
+        }
     }
 
     public function getSavedScribbles() : array {
 
         try {
+            $this->connect();
             $sqli = "SELECT * FROM " . self::$dbTable;
             $result = mysqli_query(self::$conn, $sqli);
 
@@ -81,6 +78,8 @@ class ScribbleStorage {
             return $this->collectionOfItems;
         } catch (Exception $e) {
             echo "Problems!! .... $e";
+        } finally {
+            $this->closeConnection();
         }
     }
 
@@ -89,6 +88,7 @@ class ScribbleStorage {
     }
 
     public function closeConnection () {
+        // echo "connection closed";
         self::$conn->close();
     }
 }

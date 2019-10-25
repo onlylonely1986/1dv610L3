@@ -27,13 +27,19 @@ class Application {
     private $userIsLoggedIn;
 
     public function __construct($settings) {
-        $this->userStorage = new \model\UserStorage($settings);
-        $this->scribbleStorage = new \model\ScribbleStorage($settings);
-        $this->session = new \model\SessionModel();
         $this->layoutView  = new \view\LayoutView();
         $this->scribbleView  = new \view\ScribbleView();
         $this->loginView  = new \view\LoginView();
         $this->registerView  = new \view\RegisterView();
+        $this->session = new \model\SessionModel();
+        try {
+            $this->userStorage = new \model\UserStorage($settings);
+            $this->scribbleStorage = new \model\ScribbleStorage($settings);
+        } catch (\model\ConnectionException $e) {
+            $this->layoutView->setMessage($e->messageToUser);
+        }
+        
+        
         $this->loginController = new \controller\LoginController($this->loginView,
                                                                     $this->userStorage, 
                                                                     $this->session);
@@ -43,6 +49,7 @@ class Application {
         $this->scribbleController = new \controller\ScribbleController($this->scribbleView, 
                                                                         $this->scribbleStorage, 
                                                                         $this->session);
+        
     }
 
 	public function run() {

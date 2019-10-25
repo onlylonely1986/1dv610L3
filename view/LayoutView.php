@@ -6,6 +6,7 @@ class LayoutView {
 
   private $sessionLoggedin;
   private $sessionRegister;
+  private $message = "";
 
   public function setLoggedinState($sessionLoggedin) {
 		$this->sessionLoggedin = $sessionLoggedin;
@@ -13,7 +14,11 @@ class LayoutView {
   
   public function setRegisterState($sessionRegister) {
 		$this->sessionRegister = $sessionRegister;
-	}
+  }
+  
+  public function setMessage($message) {
+    $this->message = $message;
+  }
   
   public function render(LoginView $v, RegisterView $rv, DateTimeView $dv, ScribbleView $sv) {
 
@@ -26,6 +31,7 @@ class LayoutView {
         <body>
           <h1>SCRIBBLEBOARD</h1>
           ' . $this->title() . '
+          ' . $this->message . '
           <div class="container">
             ' . $this->body($v, $rv) . '
             ' . $dv->echoHTML() . '
