@@ -1,6 +1,6 @@
 Project folder for Lab 3, in course 1dv610
 
-If you download the application and want to use it. Check settings.php.default and update it with your own variables for databaseconnection. Then change the name to setting.php. You can than run it either at own host online, or thrue for example XXAMP.
+If you download the application and want to use it. Check settings.php.default and update it with your own variables for databaseconnection. Then change the name to settings.php. You can than run it either at own host online, or thrue for example XXAMP.
 
 This is project folder for a php-project witch you can use to register and login new users. When you are logged in you can post small scribbles (short text-posts, like notes or thoughts). You can also read other scribbles from other users, but you are only allowed to remove your own posts.
 
