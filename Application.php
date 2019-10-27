@@ -6,6 +6,7 @@ require_once("model/SessionModel.php");
 require_once("controller/LoginController.php");
 require_once("controller/RegisterController.php");
 require_once("controller/ScribbleController.php");
+require_once("view/ExceptionHTMLMessages.php");
 require_once("view/LayoutView.php");
 require_once("view/LoginView.php");
 require_once("view/RegisterView.php");
@@ -13,6 +14,7 @@ require_once("view/DateTimeView.php");
 require_once("view/ScribbleView.php");
 
 class Application {
+    private $userMsg;
     private $userStorage;
     private $scribbleStorage;
     private $session;
@@ -27,16 +29,24 @@ class Application {
     private $userIsLoggedIn;
 
     public function __construct($settings) {
+        $this->userMsg = new \view\ExceptionHTMLMessages();
         $this->layoutView  = new \view\LayoutView();
         $this->scribbleView  = new \view\ScribbleView();
         $this->loginView  = new \view\LoginView();
         $this->registerView  = new \view\RegisterView();
         $this->session = new \model\SessionModel();
+        $this->userStorage = new \model\UserStorage($settings);
+        $this->scribbleStorage = new \model\ScribbleStorage($settings);
         try {
-            $this->userStorage = new \model\UserStorage($settings);
-            $this->scribbleStorage = new \model\ScribbleStorage($settings);
+            $this->scribbleStorage->connect();
         } catch (\model\ConnectionException $e) {
-            $this->layoutView->setMessage($e->messageToUser);
+            echo "fångar denna eller?? 2";
+            // $e->getMessage();
+            // echo $this->userMsg::$messageToUser;
+            $this->layoutView->setMessage($this->userMsg::$messageToUser);
+        } catch (\Exception $e) {
+            echo "fångar exception iställetr eller?? 3";
+            $this->layoutView->setMessage($this->userMsg::$messageToUser);
         }
         
         
@@ -86,11 +96,23 @@ class Application {
         $this->loginView->setLoggedinState($this->username);
         $this->scribbleView->setLoggedinState($this->username);
         $this->layoutView->setLoggedinState($this->session->checkLoggedinSession());
-        $this->scribbleController->checkForNewScribble($this->username);
+        try {
+            $this->scribbleController->checkForNewScribble($this->username);
+        } catch (\model\ConnectionException $e) {
+            $this->layoutView->setMessage($e->messageToUser);
+        }
     }
 
 	private function generateOutput() {
-        $data = $this->scribbleStorage->getSavedScribbles();
+        $data = [];
+        try {
+            if ($this->scribbleStorage->connect()) {
+                $data = $this->scribbleStorage->getSavedScribbles();
+            }
+        } catch (\model\ConnectionException $e) {
+            $this->layoutView->setMessage($this->userMsg::$messageToUser);
+            // $this->layoutView->setMessage($e->messageToUser);
+        }
         $this->scribbleView->setCollection($data);        
         $dateView  = new \view\DateTimeView();
         $this->layoutView->render($this->loginView, $this->registerView, $dateView, $this->scribbleView);

@@ -29,6 +29,10 @@ class ScribbleView {
     } 
   }
 
+  public function setMessage($message) {
+    $this->message = $message;
+  }
+
   public function postNewScribble() : bool {
     if(isset($_POST[self::$send])) {
       if (isset($_POST[self::$title]) && isset($_POST[self::$text])) {

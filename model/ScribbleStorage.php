@@ -19,26 +19,45 @@ class ScribbleStorage {
         self::$passWord = $settings->dbpassWord;
         self::$dbName = $settings->dbName;
         self::$dbTable = $settings->dbTableName;
- 
-        $this->connect();  
     }
 
-    private function connect() {
-        self::$conn = new \mysqli(self::$serverName, 
-                                    self::$userName, 
-                                    self::$passWord, 
-                                    self::$dbName
-                                );
+    public function connect() : bool {
+        self::$conn = new \mysqli(
+            self::$serverName, 
+            self::$userName, 
+            self::$passWord, 
+            self::$dbName
+            );
 
-        if (self::$conn->connect_errno) {
+        if (!self::$conn->connect_errno) {
+            return true;
+        } else {
             throw new ConnectionException();
             exit();
+            return false;
         }
+    }
+
+    public function getSavedScribbles() : array {
+        $sqli = "SELECT * FROM " . self::$dbTable;
+        $result = mysqli_query(self::$conn, $sqli);
+        if(!$result) {
+            throw new ConnectionException();
+        }
+        $data = array();
+        if(mysqli_num_rows($result) > 0) {
+            while($obj = $result->fetch_object()) {
+                $this->collectionOfItems[] = new ScribbleItem($obj->user, $obj->title, $obj->text);
+            }
+        }
+
+        mysqli_close(self::$conn);
+        return $this->collectionOfItems;
+        
     }
 
     // TODO avoid sql injections and use prepered statements
     public function saveScribbles($scribbleItem) {
-        
         $sql = "INSERT INTO " . self::$dbTable;
         $sql .= "(";
         $sql .= "`user`, `title`, `text`";
@@ -50,36 +69,9 @@ class ScribbleStorage {
         $sql .= "'".$scribbleItem->text."' ";
         $sql .= ");";
 
-        try {
-            $this->connect();
-            $results = self::$conn->query($sql);        
-        } catch (Exception $e) {
-            echo "Error: " . $e . "<br>" . self::$conn->error;
-        } finally {
-            $this->closeConnection();
-        }
-    }
-
-    public function getSavedScribbles() : array {
-
-        try {
-            $this->connect();
-            $sqli = "SELECT * FROM " . self::$dbTable;
-            $result = mysqli_query(self::$conn, $sqli);
-
-            $data = array();
-            if(mysqli_num_rows($result) > 0) {
-                while($obj = $result->fetch_object()) {
-                    $this->collectionOfItems[] = new ScribbleItem($obj->user, $obj->title, $obj->text);
-                }
-            }
-
-            mysqli_close(self::$conn);
-            return $this->collectionOfItems;
-        } catch (Exception $e) {
-            echo "Problems!! .... $e";
-        } finally {
-            $this->closeConnection();
+        $results = self::$conn->query($sql);  
+        if(!$results) {
+            throw new ConnectionException();
         }
     }
 
@@ -88,7 +80,8 @@ class ScribbleStorage {
     }
 
     public function closeConnection () {
-        // echo "connection closed";
-        self::$conn->close();
+        if (!self::$conn->connect_errno) {
+            self::$conn->close();
+        } 
     }
 }

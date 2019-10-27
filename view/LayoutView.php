@@ -8,6 +8,9 @@ class LayoutView {
   private $sessionRegister;
   private $message = "";
 
+  public function __construct() {
+    $this->message = "";
+  }
   public function setLoggedinState($sessionLoggedin) {
 		$this->sessionLoggedin = $sessionLoggedin;
   }
@@ -29,9 +32,9 @@ class LayoutView {
             <title>Scribbles</title>
         </head>
         <body>
+          ' . $this->message . '
           <h1>SCRIBBLEBOARD</h1>
           ' . $this->title() . '
-          ' . $this->message . '
           <div class="container">
             ' . $this->body($v, $rv) . '
             ' . $dv->echoHTML() . '

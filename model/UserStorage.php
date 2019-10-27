@@ -20,14 +20,6 @@ class UserStorage {
         self::$passWord = $settings->dbpassWord;
         self::$dbName = $settings->dbName;
         self::$dbTable = $settings->dbTableNameUsers;
-
-        try {
-            self::$conn = $this->connect();
-        // TODO write more specific exeptions for specific problems
-        } catch (Exception $e){
-            self::$conn->connect_error;
-            die("Connection failed: " . $e . "  " . self::$conn->connect_error);
-        }
     }
 
     // TODO avoid sql injections and use prepered statements
@@ -47,6 +39,7 @@ class UserStorage {
     }
 
     public function getUserFromDB(User $newUser) {
+        $this->connect();
         $query = "SELECT * FROM " . self::$dbTable;
 
         if ($result = self::$conn->query($query)) {
