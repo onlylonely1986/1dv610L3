@@ -30,7 +30,6 @@ class ScribbleController {
                 $_POST = [];
                 return true;
 			} catch (\model\ConnectionException $e) {
-                // $this->layoutView->setMessage($this->userMsg::$messageToUser);
                 $this->view->setMessage($this->userMsg::$messageToUserPublish);
                 return false;
 			}

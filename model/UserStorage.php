@@ -9,7 +9,6 @@ class UserStorage {
     private static $dbName;
     private static $dbTable;
     private static $conn;
-
     private static $user;
     
     // TODO do an abstract class for storage and let the two storages inherit from it
@@ -24,25 +23,31 @@ class UserStorage {
 
     // TODO avoid sql injections and use prepered statements
     // TODO avoid repeating code in different classes (ScribbleStorage)
-    private function connect() {
-        try {
-            self::$conn = new \mysqli(
-                self::$serverName,
-                self::$userName, 
-                self::$passWord, 
-                self::$dbName
-            );
-            return self::$conn; 
-        } catch(Exception $e) {
-            die("Connection failed: " . $e . "  " . self::$conn->connect_error);
+    public function connect() {
+        self::$conn = new \mysqli(
+            self::$serverName,
+            self::$userName, 
+            self::$passWord, 
+            self::$dbName
+        );
+        if (!self::$conn->connect_errno) {
+            return true;
+        } else {
+            throw new ConnectionException();
+            exit();
+            return false;
         }
     }
 
     public function getUserFromDB(User $newUser) {
         $this->connect();
         $query = "SELECT * FROM " . self::$dbTable;
-
+        
         if ($result = self::$conn->query($query)) {
+            if(!$result) {
+                throw new ConnectionException();
+                return false;
+            }
             while ($row = $result->fetch_row()) {
                 if ($row[0] == $newUser->getName() && $row[1] == password_verify($newUser->getPass(), $row[1])) {
                     return true;
@@ -56,6 +61,10 @@ class UserStorage {
     public function checkForPossibleName(string $username) : bool {
         $query = "SELECT * FROM " . self::$dbTable;
         if ($result = self::$conn->query($query)) {
+            if(!$result) {
+                throw new ConnectionException();
+                return false;
+            }
             while ($row = $result->fetch_row()) {
                 if ($row[0] == $username) {
                     return false;
@@ -81,10 +90,9 @@ class UserStorage {
         $sql .= "'". $hashPwd ."'";
         $sql .= ");";
 
-        try {
-            $results = self::$conn->query($sql);       
-        } catch (Exception $e) {
-            echo "Error: " . $e . "<br>" . self::$conn->error;
+        $results = self::$conn->query($sql);       
+        if(!$results) {
+            throw new ConnectionException();
         }
     }
 }

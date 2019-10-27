@@ -39,13 +39,10 @@ class Application {
         $this->scribbleStorage = new \model\ScribbleStorage($settings);
         try {
             $this->scribbleStorage->connect();
+            $this->userStorage->connect();
         } catch (\model\ConnectionException $e) {
-            echo "fångar denna eller?? 2";
-            // $e->getMessage();
-            // echo $this->userMsg::$messageToUser;
-            $this->layoutView->setMessage($this->userMsg::$messageToUser);
+            $this->layoutView->setMessage($this->userMsg::$messageToUserConn);
         } catch (\Exception $e) {
-            echo "fångar exception iställetr eller?? 3";
             $this->layoutView->setMessage($this->userMsg::$messageToUser);
         }
         
@@ -99,7 +96,7 @@ class Application {
         try {
             $this->scribbleController->checkForNewScribble($this->username);
         } catch (\model\ConnectionException $e) {
-            $this->layoutView->setMessage($e->messageToUser);
+            $this->layoutView->setMessage($e->messageToUserConn);
         }
     }
 
@@ -110,8 +107,7 @@ class Application {
                 $data = $this->scribbleStorage->getSavedScribbles();
             }
         } catch (\model\ConnectionException $e) {
-            $this->layoutView->setMessage($this->userMsg::$messageToUser);
-            // $this->layoutView->setMessage($e->messageToUser);
+            $this->layoutView->setMessage($this->userMsg::$messageToUserConn);
         }
         $this->scribbleView->setCollection($data);        
         $dateView  = new \view\DateTimeView();
